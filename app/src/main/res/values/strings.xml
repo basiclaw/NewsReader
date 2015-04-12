@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">News Reader</string>
+    <string name="title_activity_item_detail">ItemDetailActivity</string>
+
+    <string name="nav_home">Home</string>
+    <string name="nav_bookmarks">Bookmarks</string>
+    <string name="nav_exit">Exit</string>
+
+    <string name="action_home">Home</string>
+    <string name="action_bookmarks">Bookmarks</string>
+    <string name="action_exit">Exit</string>
+</resources>
