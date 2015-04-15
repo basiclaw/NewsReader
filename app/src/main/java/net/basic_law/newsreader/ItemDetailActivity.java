@@ -10,7 +10,6 @@ import android.webkit.WebView;
 
 
 public class ItemDetailActivity extends Activity {
-
     private static final String ITEM_EXTRA = "item";
 
     public static Intent getStartIntent(Context context, NewsParser.Item item) {
@@ -24,11 +23,10 @@ public class ItemDetailActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
 
-        WebView itemDetail = (WebView) findViewById(R.id.item_detail);
         //TextView itemDetail = (TextView) findViewById(R.id.item_detail);
+        WebView itemDetail = (WebView) findViewById(R.id.item_detail);
 
-        NewsParser.Item item =
-                (NewsParser.Item) getIntent().getSerializableExtra(ITEM_EXTRA);
+        NewsParser.Item item = (NewsParser.Item) getIntent().getSerializableExtra(ITEM_EXTRA);
         if (item != null) {
             //itemDetail.setText(item.toString());
             itemDetail.loadDataWithBaseURL("", item.toString(), "text/html", "UTF-8", "");

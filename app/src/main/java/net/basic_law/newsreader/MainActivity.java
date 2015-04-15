@@ -8,7 +8,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -22,30 +25,8 @@ import java.util.List;
 
 
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener{
-
     private List<NewsParser.Item> items = null;
-    private ArrayAdapter<NewsParser.Item> adapter;
     private ArrayAdapter<String> titleAdapter;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        //adapter = new ArrayAdapter<>(this, R.layout.rss_feed_item, items);
-        titleAdapter = new ArrayAdapter<>(this, R.layout.news_item);
-        ListView listView = (ListView) findViewById(R.id.feed_listview);
-        listView.setOnItemClickListener(this);
-        //listView.setAdapter(adapter);
-        listView.setAdapter(titleAdapter);
-        new GetFeedTask().execute();
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        // startActivity(ItemDetailActivity.getStartIntent(this, adapter.getItem(position)));
-        startActivity(ItemDetailActivity.getStartIntent(this, items.get(position)));
-    }
 
     private class GetFeedTask extends AsyncTask<Void, Void, List<String>> {
 
@@ -84,6 +65,24 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        titleAdapter = new ArrayAdapter<>(this, R.layout.news_item);
+        ListView listView = (ListView) findViewById(R.id.feed_listview);
+        listView.setOnItemClickListener(this);
+        listView.setAdapter(titleAdapter);
+        new GetFeedTask().execute();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        // startActivity(ItemDetailActivity.getStartIntent(this, adapter.getItem(position)));
+        startActivity(ItemDetailActivity.getStartIntent(this, items.get(position)));
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -104,4 +103,15 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
         return super.onOptionsItemSelected(item);
     }
+
+    ImageButton homeButton = (ImageButton) this.findViewById(R.id.nav_home);
+    // homeButton.setOnClickListener(new View.OnClickListener(){
+    //     public void onClick(View v){
+    //         Toast.makeText(this, "test", Toast.LENGTH_SHORT).show();
+    //     }
+    // });
+    Button profileButton = (Button) this.findViewById(R.id.nav_profile);
+
+    Button bookmarksButton = (Button) this.findViewById(R.id.nav_bookmarks);
+
 }
