@@ -1,6 +1,7 @@
 package net.basic_law.newsreader;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -24,94 +25,109 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends Activity implements AdapterView.OnItemClickListener{
+public class MainActivity extends Activity implements AdapterView.OnItemClickListener
+{
+    private MainActivity self = this;
     private List<NewsParser.Item> items = null;
     private ArrayAdapter<String> titleAdapter;
 
-    private class GetFeedTask extends AsyncTask<Void, Void, List<String>> {
-
+    private class GetFeedTask extends AsyncTask<Void, Void, List<String>>
+    {
         @Override
-        protected List<String> doInBackground(Void... params) {
+        protected List<String> doInBackground( Void... params )
+        {
             try {
                 Request request = new Request.Builder()
-                        .url("https://news.google.com/news?pz=1&cf=all&ned=hk&hl=zh-TW&output=rss")
+                        .url( "https://news.google.com/news?pz=1&cf=all&ned=hk&hl=zh-TW&output=rss" )
                         .build();
 
-                Response response = new OkHttpClient().newCall(request).execute();
+                Response response = new OkHttpClient().newCall( request ).execute();
                 List <String> itemsTitle = new ArrayList<String>();
                 try {
-                    items = new NewsParser().parse(response.body().byteStream());
-                } catch (XmlPullParserException e) {
+                    items = new NewsParser().parse( response.body().byteStream() );
+                } catch ( XmlPullParserException e ) {
                     e.printStackTrace();
                 }
-                for(NewsParser.Item item : items){
-                    itemsTitle.add(item.getTitle());
+                for ( NewsParser.Item item : items ) {
+                    itemsTitle.add( item.getTitle() );
                 }
                 return itemsTitle;
-
-            } catch (IOException e) {
+            } catch ( IOException e ) {
                 e.printStackTrace();
                 return null;
             }
         }
 
         @Override
-        protected void onPostExecute(List<String> itemsTitle) {
-            if (itemsTitle != null) {
+        protected void onPostExecute( List<String> itemsTitle )
+        {
+            if ( itemsTitle != null ) {
                 titleAdapter.clear();
-                titleAdapter.addAll(itemsTitle);
+                titleAdapter.addAll( itemsTitle );
             }
         }
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    protected void onCreate( Bundle savedInstanceState )
+    {
+        super.onCreate( savedInstanceState );
+        setContentView( R.layout.activity_main );
 
-        titleAdapter = new ArrayAdapter<>(this, R.layout.news_item);
-        ListView listView = (ListView) findViewById(R.id.feed_listview);
-        listView.setOnItemClickListener(this);
-        listView.setAdapter(titleAdapter);
+        // set adaptor for the listView
+        titleAdapter = new ArrayAdapter<>( self , R.layout.news_item );
+        ListView listView = ( ListView ) findViewById( R.id.feed_listview );
+        listView.setOnItemClickListener( self );
+        listView.setAdapter( titleAdapter );
         new GetFeedTask().execute();
+
+        // button onClickListener
+        ( ( ImageButton ) findViewById( R.id.nav_home ) ).setOnClickListener( new View.OnClickListener() {
+            public void onClick( View v )
+            {
+                Toast.makeText( self , "reload" , Toast.LENGTH_SHORT ).show();
+                new GetFeedTask().execute();
+            }
+        } );
+
+        ( ( Button ) findViewById( R.id.nav_profile ) ).setOnClickListener( new View.OnClickListener() {
+            public void onClick( View v )
+            {
+                Toast.makeText( self , "test_profile" , Toast.LENGTH_SHORT ).show();
+            }
+        } );
+
+        ( ( Button ) findViewById( R.id.nav_bookmarks ) ).setOnClickListener( new View.OnClickListener() {
+            public void onClick( View v )
+            {
+                Toast.makeText( self , "test_bookmarks" , Toast.LENGTH_SHORT ).show();
+            }
+        } );
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        // startActivity(ItemDetailActivity.getStartIntent(this, adapter.getItem(position)));
-        startActivity(ItemDetailActivity.getStartIntent(this, items.get(position)));
+    public void onItemClick( AdapterView<?> parent , View view , int position , long id )
+    {
+        startActivity( ItemDetailActivity.getStartIntent( self , items.get( position ) ) );
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+    public boolean onCreateOptionsMenu( Menu menu )
+    {
+        getMenuInflater().inflate( R.menu.menu_main, menu );
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+    public boolean onOptionsItemSelected( MenuItem item )
+    {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_home) {
             return true;
         }
 
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected( item );
     }
-
-    ImageButton homeButton = (ImageButton) this.findViewById(R.id.nav_home);
-    // homeButton.setOnClickListener(new View.OnClickListener(){
-    //     public void onClick(View v){
-    //         Toast.makeText(this, "test", Toast.LENGTH_SHORT).show();
-    //     }
-    // });
-    Button profileButton = (Button) this.findViewById(R.id.nav_profile);
-
-    Button bookmarksButton = (Button) this.findViewById(R.id.nav_bookmarks);
 
 }

@@ -12,48 +12,55 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class NewsParser {
+public class NewsParser
+{
     private static final String ns = null;
-    public static class Item implements Serializable {
+    public static class Item implements Serializable
+    {
         public final String title;
         public final String link;
         public final String description;
         public final String thumbnail;
         public final String pubDate;
 
-        public Item(String title, String link, String description, String pubDate) {
+        public Item( String title , String link , String description , String pubDate )
+        {
             this.title = title;
             this.link = link;
-            this.description = description.replace("=\"//", "=\"http://");
-            this.thumbnail = this.description.substring( this.description.indexOf( "<img src=\"" )+10, this.description.indexOf( "\" alt=\"\" border=\"1\" " ) );
+            this.description = description.replace( "=\"//" , "=\"http://" );
+            this.thumbnail = "";
+            // this.thumbnail = this.description.substring( this.description.indexOf( "<img src=\"" )+10, this.description.indexOf( "\" alt=\"\" border=\"1\" " ) );
             this.pubDate = pubDate;
         }
-        public String getTitle(){
+        public String getTitle()
+        {
             return title + "\n" + thumbnail;
         }
         @Override
-        public String toString() {
+        public String toString()
+        {
             return title + "," + link + "," + description + "," + pubDate;
         }
     }
 
-    public List<Item> parse(InputStream in) throws XmlPullParserException, IOException {
+    public List<Item> parse( InputStream in ) throws XmlPullParserException, IOException
+    {
         try {
             XmlPullParser parser = Xml.newPullParser();
-            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            parser.setInput(in, null);
+            parser.setFeature( XmlPullParser.FEATURE_PROCESS_NAMESPACES , false );
+            parser.setInput( in , null );
             parser.nextTag();
-            return readRss(parser);
+            return readRss( parser );
         } finally {
             in.close();
         }
     }
-    private void skip(XmlPullParser parser) throws XmlPullParserException, IOException
+    private void skip( XmlPullParser parser ) throws XmlPullParserException, IOException
     {
-        if (parser.getEventType() != XmlPullParser.START_TAG) throw new IllegalStateException();
+        if ( parser.getEventType() != XmlPullParser.START_TAG ) throw new IllegalStateException();
         int depth = 1;
-        while (depth != 0) {
-            switch (parser.next()) {
+        while ( depth != 0 ) {
+            switch ( parser.next() ) {
                 case XmlPullParser.END_TAG:
                     depth--; break;
                 case XmlPullParser.START_TAG:
@@ -61,74 +68,74 @@ public class NewsParser {
             }
         }
     }
-    private List<Item> readRss(XmlPullParser parser) throws IOException, XmlPullParserException
+    private List<Item> readRss( XmlPullParser parser ) throws IOException, XmlPullParserException
     {
         List<Item> entries = new ArrayList<>();
-        parser.require(XmlPullParser.START_TAG, null, "rss");
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) continue;
+        parser.require( XmlPullParser.START_TAG , null , "rss" );
+        while ( parser.next() != XmlPullParser.END_TAG ) {
+            if ( parser.getEventType() != XmlPullParser.START_TAG ) continue;
             String name = parser.getName();
             // Starts by looking for the channel tag
-            if (name.equals("channel")) {
-                return readChannel(parser);
+            if ( name.equals( "channel" ) ) {
+                return readChannel( parser );
             } else {
-                skip(parser);
+                skip( parser );
             }
         }
         return entries;
     }
-    private List<Item> readChannel(XmlPullParser parser) throws IOException, XmlPullParserException
+    private List<Item> readChannel( XmlPullParser parser ) throws IOException, XmlPullParserException
     {
         List<Item> entries = new ArrayList<>();
-        parser.require(XmlPullParser.START_TAG, null, "channel");
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) continue;
+        parser.require( XmlPullParser.START_TAG , null , "channel" );
+        while ( parser.next() != XmlPullParser.END_TAG ) {
+            if ( parser.getEventType() != XmlPullParser.START_TAG ) continue;
             String name = parser.getName();
-            // Starts by looking for the entry tag
-            if (name.equals("item")) {
-                entries.add(readItem(parser));
+            // Starts by looking for the item tag
+            if ( name.equals( "item" ) ) {
+                entries.add( readItem( parser ) );
             } else {
-                skip(parser);
+                skip( parser );
             }
         }
         return entries;
     }
-    private Item readItem(XmlPullParser parser) throws IOException, XmlPullParserException
+    private Item readItem( XmlPullParser parser ) throws IOException, XmlPullParserException
     {
-        parser.require(XmlPullParser.START_TAG, ns, "item");
+        parser.require( XmlPullParser.START_TAG , ns , "item" );
         String title = null;
         String link = null;
         String description = null;
         String pubDate = null;
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) continue;
+        while ( parser.next() != XmlPullParser.END_TAG ) {
+            if ( parser.getEventType() != XmlPullParser.START_TAG ) continue;
             String name = parser.getName();
             switch (name) {
                 case "title":
-                    title = readRequiredTag(parser, name); break;
+                    title = readRequiredTag( parser , name ); break;
                 case "link":
-                    link = readRequiredTag(parser, name); break;
+                    link = readRequiredTag( parser , name ); break;
                 case "description":
-                    description = readRequiredTag(parser, name); break;
+                    description = readRequiredTag( parser , name ); break;
                 case "pubDate":
-                    pubDate = readRequiredTag(parser, name); break;
+                    pubDate = readRequiredTag( parser , name ); break;
                 default:
-                    skip(parser); break;
+                    skip( parser );
             }
         }
-        return new Item(title, link, description, pubDate);
+        return new Item( title , link , description , pubDate );
     }
-    private String readRequiredTag(XmlPullParser parser, String tag) throws IOException, XmlPullParserException
+    private String readRequiredTag( XmlPullParser parser , String tag ) throws IOException, XmlPullParserException
     {
-        parser.require(XmlPullParser.START_TAG, ns, tag);
-        String result = readText(parser);
-        parser.require(XmlPullParser.END_TAG, ns, tag);
+        parser.require( XmlPullParser.START_TAG , ns , tag );
+        String result = readText( parser );
+        parser.require( XmlPullParser.END_TAG , ns , tag );
         return result;
     }
-    private String readText(XmlPullParser parser) throws IOException, XmlPullParserException
+    private String readText( XmlPullParser parser ) throws IOException, XmlPullParserException
     {
         String result = "";
-        if (parser.next() == XmlPullParser.TEXT) {
+        if ( parser.next() == XmlPullParser.TEXT ) {
             result = parser.getText();
             parser.nextTag();
         }
