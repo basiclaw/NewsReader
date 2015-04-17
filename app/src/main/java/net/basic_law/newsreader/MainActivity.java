@@ -27,9 +27,9 @@ import java.util.List;
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
 	private MainActivity self = this;
 	private List<NewsParser.Item> items = null;
-	private ArrayAdapter<String> detailsAdapter;
+	NewsItemAdapter newsItemAdapter;
 
-	private class GetFeedTask extends AsyncTask<Void, Void, List<String>> {
+	private class GetFeedTask extends AsyncTask<Void, Void, List<NewsParser.Item>> {
 		private String[][] sources = {
 				{"Google", "https://news.google.com/news?pz=1&cf=all&ned=hk&hl=zh-TW&output=rss"},
 				{"Oriental Daily", "http://orientaldaily.on.cc/rss/news.xml"},
@@ -44,23 +44,20 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 		};
 
 		@Override
-		protected List<String> doInBackground(Void... params) {
-			List<String> itemsDetails = new ArrayList<>();
+		protected List<NewsParser.Item> doInBackground(Void... params) {
 			try {
-				items = new ArrayList<>();
+				List<NewsParser.Item> newsItems = new ArrayList<>();
 				for (String[] src : this.sources) {
 					Request request = new Request.Builder().url( src[1] ).build();
 					Response response = new OkHttpClient().newCall(request).execute();
 
 					try {
-						items.addAll( new NewsParser().parse(src , response.body().byteStream()) );
+						newsItems.addAll( new NewsParser().parse(src , response.body().byteStream()) );
 					} catch (XmlPullParserException e) {
 						e.printStackTrace();
 					}
 				}
-
-				for (NewsParser.Item item : items) itemsDetails.add(item.getDetails());
-				return itemsDetails;
+				return newsItems;
 			} catch (IOException e) {
 				e.printStackTrace();
 				return null;
@@ -68,10 +65,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 		}
 
 		@Override
-		protected void onPostExecute(List<String> itemsDetails) {
-			if (itemsDetails != null) {
-				detailsAdapter.clear();
-				detailsAdapter.addAll(itemsDetails);
+		protected void onPostExecute(List<NewsParser.Item> newsItems) {
+			if (newsItems != null ){
+				newsItemAdapter.clear().addAll( newsItems );
 			}
 		}
 	}
@@ -81,11 +77,11 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		// set adaptor for the listView
-		detailsAdapter = new ArrayAdapter<>(self, R.layout.news_item, R.id.item_overview);
 		ListView listView = (ListView) findViewById(R.id.feed_listview);
 		listView.setOnItemClickListener(self);
-		listView.setAdapter(detailsAdapter);
+		newsItemAdapter = new NewsItemAdapter(self);
+		listView.setAdapter(newsItemAdapter);
+
 		new GetFeedTask().execute();
 
 		// button onClickListener
