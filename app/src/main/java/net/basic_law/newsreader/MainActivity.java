@@ -1,7 +1,6 @@
 package net.basic_law.newsreader;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -25,109 +24,109 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends Activity implements AdapterView.OnItemClickListener
-{
-    private MainActivity self = this;
-    private List<NewsParser.Item> items = null;
-    private ArrayAdapter<String> titleAdapter;
+public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
+	private MainActivity self = this;
+	private List<NewsParser.Item> items = null;
+	private ArrayAdapter<String> detailsAdapter;
 
-    private class GetFeedTask extends AsyncTask<Void, Void, List<String>>
-    {
-        @Override
-        protected List<String> doInBackground( Void... params )
-        {
-            try {
-                Request request = new Request.Builder()
-                        .url( "https://news.google.com/news?pz=1&cf=all&ned=hk&hl=zh-TW&output=rss" )
-                        .build();
+	private class GetFeedTask extends AsyncTask<Void, Void, List<String>> {
+		private String[][] sources = {
+				{"Google", "https://news.google.com/news?pz=1&cf=all&ned=hk&hl=zh-TW&output=rss"},
+				{"Oriental Daily", "http://orientaldaily.on.cc/rss/news.xml"},
+				{"Apple Daily", "http://rss.appleactionews.com/rss.xml"},
+				{"MingPao", "http://news.mingpao.com/cfm/rss.cfm"},
+				{"Yahoo News", "https://hk.news.yahoo.com/sitemap/"},
+				{"RTHK", "http://rthk.hk/text/chi/news/rss.htm"},
+				{"HK GOV", "http://www.gov.hk/tc/about/rss.htm"},
+				{"The Standard", "http://www.thestandard.com.hk/newsfeed/latest/news.xml"},
+				{"SCMP", "http://www.scmp.com/rss"},
+				{"Wall Street Journal", "http://online.wsj.com/xml/rss/3_8070.xml"}
+		};
 
-                Response response = new OkHttpClient().newCall( request ).execute();
-                List <String> itemsTitle = new ArrayList<String>();
-                try {
-                    items = new NewsParser().parse( response.body().byteStream() );
-                } catch ( XmlPullParserException e ) {
-                    e.printStackTrace();
-                }
-                for ( NewsParser.Item item : items ) {
-                    itemsTitle.add( item.getTitle() );
-                }
-                return itemsTitle;
-            } catch ( IOException e ) {
-                e.printStackTrace();
-                return null;
-            }
-        }
+		@Override
+		protected List<String> doInBackground(Void... params) {
+			List<String> itemsDetails = new ArrayList<>();
+			try {
+				items = new ArrayList<>();
+				for (String[] src : this.sources) {
+					Request request = new Request.Builder().url( src[1] ).build();
+					Response response = new OkHttpClient().newCall(request).execute();
 
-        @Override
-        protected void onPostExecute( List<String> itemsTitle )
-        {
-            if ( itemsTitle != null ) {
-                titleAdapter.clear();
-                titleAdapter.addAll( itemsTitle );
-            }
-        }
-    }
+					try {
+						items.addAll( new NewsParser().parse(src , response.body().byteStream()) );
+					} catch (XmlPullParserException e) {
+						e.printStackTrace();
+					}
+				}
 
-    @Override
-    protected void onCreate( Bundle savedInstanceState )
-    {
-        super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_main );
+				for (NewsParser.Item item : items) itemsDetails.add(item.getDetails());
+				return itemsDetails;
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
 
-        // set adaptor for the listView
-        titleAdapter = new ArrayAdapter<>( self , R.layout.news_item );
-        ListView listView = ( ListView ) findViewById( R.id.feed_listview );
-        listView.setOnItemClickListener( self );
-        listView.setAdapter( titleAdapter );
-        new GetFeedTask().execute();
+		@Override
+		protected void onPostExecute(List<String> itemsDetails) {
+			if (itemsDetails != null) {
+				detailsAdapter.clear();
+				detailsAdapter.addAll(itemsDetails);
+			}
+		}
+	}
 
-        // button onClickListener
-        ( ( ImageButton ) findViewById( R.id.nav_home ) ).setOnClickListener( new View.OnClickListener() {
-            public void onClick( View v )
-            {
-                Toast.makeText( self , "reload" , Toast.LENGTH_SHORT ).show();
-                new GetFeedTask().execute();
-            }
-        } );
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
 
-        ( ( Button ) findViewById( R.id.nav_profile ) ).setOnClickListener( new View.OnClickListener() {
-            public void onClick( View v )
-            {
-                Toast.makeText( self , "test_profile" , Toast.LENGTH_SHORT ).show();
-            }
-        } );
+		// set adaptor for the listView
+		detailsAdapter = new ArrayAdapter<>(self, R.layout.news_item, R.id.item_overview);
+		ListView listView = (ListView) findViewById(R.id.feed_listview);
+		listView.setOnItemClickListener(self);
+		listView.setAdapter(detailsAdapter);
+		new GetFeedTask().execute();
 
-        ( ( Button ) findViewById( R.id.nav_bookmarks ) ).setOnClickListener( new View.OnClickListener() {
-            public void onClick( View v )
-            {
-                Toast.makeText( self , "test_bookmarks" , Toast.LENGTH_SHORT ).show();
-            }
-        } );
-    }
+		// button onClickListener
+		((ImageButton) findViewById(R.id.nav_home)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Toast.makeText(self, "reload", Toast.LENGTH_SHORT).show();
+				new GetFeedTask().execute();
+			}
+		});
+		((Button) findViewById(R.id.nav_profile)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Toast.makeText(self, "test_profile", Toast.LENGTH_SHORT).show();
+			}
+		});
+		((Button) findViewById(R.id.nav_bookmarks)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Toast.makeText(self, "test_bookmarks", Toast.LENGTH_SHORT).show();
+			}
+		});
+	}
 
-    @Override
-    public void onItemClick( AdapterView<?> parent , View view , int position , long id )
-    {
-        startActivity( ItemDetailActivity.getStartIntent( self , items.get( position ) ) );
-    }
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		startActivity(ItemDetailActivity.getStartIntent(self, items.get(position)));
+	}
 
-    @Override
-    public boolean onCreateOptionsMenu( Menu menu )
-    {
-        getMenuInflater().inflate( R.menu.menu_main, menu );
-        return true;
-    }
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.menu_main, menu);
+		return true;
+	}
 
-    @Override
-    public boolean onOptionsItemSelected( MenuItem item )
-    {
-        int id = item.getItemId();
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
 
-        if (id == R.id.action_home) {
-            return true;
-        }
+		if (id == R.id.action_home) {
+			return true;
+		}
 
-        return super.onOptionsItemSelected( item );
-    }
+		return super.onOptionsItemSelected(item);
+	}
 
 }
