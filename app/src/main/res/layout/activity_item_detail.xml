@@ -1,63 +1,66 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context=".MainActivity">
+				xmlns:tools="http://schemas.android.com/tools"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				tools:context=".MainActivity">
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/layout_main"
-        android:layout_alignParentTop="true"
-        android:layout_above="@+id/layout_nav">
+	<LinearLayout
+		android:id="@+id/layout_main"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_above="@+id/layout_nav"
+		android:layout_alignParentTop="true"
+		android:orientation="horizontal">
 
-        <WebView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/item_detail"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
+		<WebView
+			android:id="@+id/item_description"
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"/>
 
-    </LinearLayout>
+	</LinearLayout>
 
-    <RelativeLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="70dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/layout_nav"
-        android:weightSum="1">
+	<RelativeLayout
+		android:id="@+id/layout_nav"
+		android:layout_width="fill_parent"
+		android:layout_height="70dp"
+		android:layout_alignParentBottom="true"
+		android:layout_alignParentStart="true"
+		android:orientation="horizontal"
+		android:weightSum="1">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_margin="0dp"
-            android:padding="0dp"
-            android:text="@string/nav_profile"
-            android:id="@+id/nav_profile"
-            android:layout_centerVertical="true"
-            android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/nav_home" />
-        <ImageButton
-            android:layout_width="100dp"
-            android:layout_height="fill_parent"
-            android:layout_margin="0dp"
-            android:padding="0dp"
-            android:text="@string/nav_home"
-            android:id="@+id/nav_home"
-            android:src="#ffff0000"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_margin="0dp"
-            android:padding="0dp"
-            android:text="@string/nav_bookmarks"
-            android:id="@+id/nav_bookmarks"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/nav_home" />
-    </RelativeLayout>
+		<Button
+			android:id="@+id/nav_profile"
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent"
+			android:layout_alignParentStart="true"
+			android:layout_centerVertical="true"
+			android:layout_margin="0dp"
+			android:layout_toStartOf="@+id/nav_home"
+			android:padding="0dp"
+			android:text="@string/nav_profile"/>
+
+		<ImageButton
+			android:id="@+id/nav_home"
+			android:layout_width="100dp"
+			android:layout_height="fill_parent"
+			android:layout_alignParentTop="true"
+			android:layout_centerHorizontal="true"
+			android:layout_margin="0dp"
+			android:padding="0dp"
+			android:src="#ffff0000"
+			android:text="@string/nav_home"/>
+
+		<Button
+			android:id="@+id/nav_bookmarks"
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent"
+			android:layout_alignParentEnd="true"
+			android:layout_centerVertical="true"
+			android:layout_margin="0dp"
+			android:layout_toEndOf="@+id/nav_home"
+			android:padding="0dp"
+			android:text="@string/nav_bookmarks"/>
+	</RelativeLayout>
 
 </RelativeLayout>

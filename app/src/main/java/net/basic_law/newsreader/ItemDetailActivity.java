@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 public class ItemDetailActivity extends Activity {
 	private ItemDetailActivity self = this;
-	private static final String ITEM_EXTRA = "item";
+	private static final String ITEM_EXTRA = "";
 
 	public static Intent getStartIntent(Context context, NewsParser.Item item) {
 		Intent intent = new Intent(context, ItemDetailActivity.class);
@@ -27,10 +27,10 @@ public class ItemDetailActivity extends Activity {
 		setContentView(R.layout.activity_item_detail);
 
 		// set details for webView
-		WebView itemDetail = (WebView) findViewById(R.id.item_detail);
+		WebView itemDetail = (WebView) findViewById(R.id.item_description);
 		NewsParser.Item item = (NewsParser.Item) getIntent().getSerializableExtra(ITEM_EXTRA);
 		if (item != null) {
-			itemDetail.loadDataWithBaseURL("", item.toString(), "text/html", "UTF-8", "");
+			itemDetail.loadDataWithBaseURL("", item.getDescription(), "text/html", "UTF-8", "");
 		}
 
 		// button onClickListener

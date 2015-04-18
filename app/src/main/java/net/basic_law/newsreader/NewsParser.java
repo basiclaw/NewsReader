@@ -130,16 +130,16 @@ public class NewsParser {
 			String name = parser.getName();
 			switch (name) {
 				case "title":
-					title = readRequiredTag(parser, name);
+					title = readRequiredTag(parser, name).trim();
 					break;
 				case "link":
-					link = readRequiredTag(parser, name);
+					link = readRequiredTag(parser, name).trim();
 					break;
 				case "description":
-					description = readRequiredTag(parser, name);
+					description = readRequiredTag(parser, name).trim();
 					break;
 				case "pubDate":
-					pubDate = readRequiredTag(parser, name);
+					pubDate = readRequiredTag(parser, name).trim();
 					break;
 				default:
 					skip(parser);
