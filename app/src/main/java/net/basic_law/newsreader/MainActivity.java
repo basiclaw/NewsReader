@@ -47,11 +47,11 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 			try {
 				items = new ArrayList<>();
 				for (String[] src : this.sources) {
-					Request request = new Request.Builder().url( src[1] ).build();
+					Request request = new Request.Builder().url(src[1]).build();
 					Response response = new OkHttpClient().newCall(request).execute();
 
 					try {
-						items.addAll( new NewsParser().parse(src , response.body().byteStream()) );
+						items.addAll(new NewsParser().parse(src, response.body().byteStream()));
 					} catch (XmlPullParserException e) {
 						e.printStackTrace();
 					}
@@ -65,8 +65,8 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
 		@Override
 		protected void onPostExecute(List<NewsParser.Item> items) {
-			if (items != null ){
-				newsItemAdapter.clear().addAll( items );
+			if (items != null) {
+				newsItemAdapter.clear().addAll(items);
 			}
 		}
 	}

@@ -10,4 +10,8 @@
 	<string name="action_profile">Profile</string>
 	<string name="action_bookmarks">Bookmarks</string>
 	<string name="action_exit">Exit</string>
+	<string name="placeholder_title"><![CDATA[<title>]]></string>
+	<string name="placeholder_pubDate"><![CDATA[<pubDate>]]></string>
+	<string name="placeholder_category"><![CDATA[<category>]]></string>
+	<string name="placeholder_source"><![CDATA[<source>]]></string>
 </resources>

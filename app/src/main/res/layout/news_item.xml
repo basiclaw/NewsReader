@@ -8,29 +8,55 @@
 		android:layout_width="70dp"
 		android:layout_height="70dp"
 		android:adjustViewBounds="false"
-		android:background="#ff77ffaa"/>
+		android:background="@drawable/no_thumb"
+		android:layout_margin="5dp"/>
 
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 				  android:layout_width="fill_parent"
 				  android:layout_height="wrap_content"
-				  android:orientation="vertical">
+				  android:orientation="vertical"
+				  android:minHeight="70dp"
+				  android:layout_margin="5dp">
 
 		<TextView
 			android:id="@+id/item_title"
 			xmlns:android="http://schemas.android.com/apk/res/android"
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"/>
+			android:layout_height="wrap_content"
+			android:text="@string/placeholder_title"/>
 
 		<TextView
 			android:id="@+id/item_pubDate"
 			xmlns:android="http://schemas.android.com/apk/res/android"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"/>
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/placeholder_pubDate"
+			android:layout_marginTop="10dp"
+			android:layout_gravity="right"/>
 
-		<TextView
-			android:id="@+id/item_source"
-			xmlns:android="http://schemas.android.com/apk/res/android"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"/>
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="right"
+			>
+
+			<TextView
+				android:id="@+id/item_source"
+				xmlns:android="http://schemas.android.com/apk/res/android"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/placeholder_source"
+				android:layout_gravity="right"/>
+
+			<TextView
+				android:id="@+id/item_category"
+				xmlns:android="http://schemas.android.com/apk/res/android"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/placeholder_category"
+				android:layout_marginLeft="5dp"/>
+		</LinearLayout>
+
 	</LinearLayout>
 </LinearLayout>

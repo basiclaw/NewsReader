@@ -8,8 +8,13 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public class NewsParser {
@@ -18,38 +23,55 @@ public class NewsParser {
 
 	public static class Item implements Serializable {
 		public String[] source;
-		public String title;
-		public String link;
-		public String description;
-		public String thumbnail;
-		public String pubDate;
+		public String title, link, category, pubDateString, description, thumbnail;
+		public Date pubDate;
 
-		public Item(String[] source, String title, String link, String description, String pubDate) {
+		public Item(String[] source, String title, String link, String category, String pubDateString, String description) {
 			this.source = source;
 			this.title = title;
 			this.link = link;
+			this.category = category;
+			this.pubDateString = pubDateString;
 			this.description = description.replace("=\"//", "=\"http://");
 			this.thumbnail = "";
 			// this.thumbnail = this.description.substring( this.description.indexOf( "<img src=\"" )+10, this.description.indexOf( "\" alt=\"\" border=\"1\" " ) );
-			this.pubDate = pubDate;
+			try {
+				this.pubDate = ( new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH) ).parse(pubDateString);
+				this.pubDateString = ( new SimpleDateFormat("dd MMM yyyy (EEE) HH:mm:ss", Locale.ENGLISH) ).format( this.pubDate );
+			} catch (ParseException e) {
+				this.pubDate = new Date(1970, 1, 1, 0, 0, 0);
+			}
 		}
 
-		public String getSource() {
-			return source[0];
+		public String[] getSource() {
+			return source;
 		}
+
 		public String getTitle() {
 			return title;
 		}
+
 		public String getLink() {
 			return link;
 		}
+
+		public String getCategory() {
+			return category;
+		}
+
+		public String getPubDateString() {
+			return pubDateString;
+		}
+
 		public String getDescription() {
 			return description;
 		}
+
 		public String getThumbnail() {
 			return thumbnail;
 		}
-		public String getPubDate() {
+
+		public Date getPubDate() {
 			return pubDate;
 		}
 
@@ -121,10 +143,7 @@ public class NewsParser {
 
 	private Item readItem(XmlPullParser parser) throws IOException, XmlPullParserException {
 		parser.require(XmlPullParser.START_TAG, ns, "item");
-		String title = null;
-		String link = null;
-		String description = null;
-		String pubDate = null;
+		String title = "", link = "", category = "", pubDate = "", description = "";
 		while (parser.next() != XmlPullParser.END_TAG) {
 			if (parser.getEventType() != XmlPullParser.START_TAG) continue;
 			String name = parser.getName();
@@ -135,17 +154,20 @@ public class NewsParser {
 				case "link":
 					link = readRequiredTag(parser, name).trim();
 					break;
-				case "description":
-					description = readRequiredTag(parser, name).trim();
+				case "category":
+					category = readRequiredTag(parser, name).trim();
 					break;
 				case "pubDate":
 					pubDate = readRequiredTag(parser, name).trim();
+					break;
+				case "description":
+					description = readRequiredTag(parser, name).trim();
 					break;
 				default:
 					skip(parser);
 			}
 		}
-		return new Item(source, title, link, description, pubDate);
+		return new Item(source, title, link, category, pubDate, description);
 	}
 
 	private String readRequiredTag(XmlPullParser parser, String tag) throws IOException, XmlPullParserException {
