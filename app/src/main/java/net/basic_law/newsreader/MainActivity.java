@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -46,18 +45,18 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 		@Override
 		protected List<NewsParser.Item> doInBackground(Void... params) {
 			try {
-				List<NewsParser.Item> newsItems = new ArrayList<>();
+				items = new ArrayList<>();
 				for (String[] src : this.sources) {
 					Request request = new Request.Builder().url( src[1] ).build();
 					Response response = new OkHttpClient().newCall(request).execute();
 
 					try {
-						newsItems.addAll( new NewsParser().parse(src , response.body().byteStream()) );
+						items.addAll( new NewsParser().parse(src , response.body().byteStream()) );
 					} catch (XmlPullParserException e) {
 						e.printStackTrace();
 					}
 				}
-				return newsItems;
+				return items;
 			} catch (IOException e) {
 				e.printStackTrace();
 				return null;
@@ -65,9 +64,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 		}
 
 		@Override
-		protected void onPostExecute(List<NewsParser.Item> newsItems) {
-			if (newsItems != null ){
-				newsItemAdapter.clear().addAll( newsItems );
+		protected void onPostExecute(List<NewsParser.Item> items) {
+			if (items != null ){
+				newsItemAdapter.clear().addAll( items );
 			}
 		}
 	}
@@ -106,6 +105,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		startActivity(ItemDetailActivity.getStartIntent(self, items.get(position)));
+		Toast.makeText(self, "item clicked", Toast.LENGTH_SHORT).show();
 	}
 
 	@Override

@@ -34,32 +34,28 @@ public class NewsParser {
 			this.pubDate = pubDate;
 		}
 
-		public Item(String[] pieces) {
-			this.source = source;
-			this.title = title;
-			this.link = link;
-			this.description = description.replace("=\"//", "=\"http://");
-			this.thumbnail = "";
-			// this.thumbnail = this.description.substring( this.description.indexOf( "<img src=\"" )+10, this.description.indexOf( "\" alt=\"\" border=\"1\" " ) );
-			this.pubDate = pubDate;
-		}
-
-		public String getThumbnail() {
-			return thumbnail;
+		public String getSource() {
+			return source[0];
 		}
 		public String getTitle() {
 			return title;
 		}
+		public String getLink() {
+			return link;
+		}
+		public String getDescription() {
+			return description;
+		}
+		public String getThumbnail() {
+			return thumbnail;
+		}
 		public String getPubDate() {
 			return pubDate;
-		}
-		public String getSource() {
-			return source[0];
 		}
 
 		@Override
 		public String toString() {
-			return getThumbnail() + " ::: " + getTitle() + " ::: " + getPubDate() + " ::: " + getSource();
+			return getTitle();
 		}
 	}
 

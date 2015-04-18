@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ public class NewsItemAdapter extends BaseAdapter {
 
 	private class ViewHolder {
 		TextView item_title;
+		WebView item_description;
 		TextView item_pubDate;
 		TextView item_source;
 	}
@@ -70,6 +72,7 @@ public class NewsItemAdapter extends BaseAdapter {
 			int x = R.layout.news_item;
 			convertView = inflater.inflate(resource, null);
 			holder.item_title = (TextView) convertView.findViewById(R.id.item_title);
+			holder.item_description = (WebView) convertView.findViewById(R.id.item_description);
 			holder.item_pubDate = (TextView) convertView.findViewById(R.id.item_pubDate);
 			holder.item_source = (TextView) convertView.findViewById(R.id.item_source);
 			convertView.setTag(holder);
@@ -77,6 +80,7 @@ public class NewsItemAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		holder.item_title.setText(newsItems.get(position).getTitle());
+		holder.item_description.loadDataWithBaseURL("", newsItems.get(position).getDescription(), "text/html", "UTF-8", "");
 		holder.item_pubDate.setText(newsItems.get(position).getPubDate());
 		holder.item_source.setText(newsItems.get(position).getSource());
 		return convertView;
