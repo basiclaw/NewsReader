@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -126,7 +127,7 @@ public class ItemDAO {
 
 	public NewsParser.Item getByUnique(String source, String pubDate, String title) {
 		NewsParser.Item item = null;
-		String where = COLUMN_SOURCE + "=\"" + source + "\" AND " + COLUMN_PUBDATE + "=\"" + pubDate + "\" AND " + COLUMN_TITLE + "=\"" + title + "\"";
+		String where = COLUMN_SOURCE + "=\"" + source + "\" AND " + COLUMN_PUBDATE + "=\"" + pubDate + "\" AND " + COLUMN_TITLE + "=\"" + TextUtils.htmlEncode(title) + "\"";
 		Cursor cursor = db.query(TABLE_NAME, null, where, null, null, null, null, null);
 
 		if (cursor.moveToFirst()) {
@@ -173,6 +174,19 @@ public class ItemDAO {
 	public List<NewsParser.Item> getBookmarks() {
 		List<NewsParser.Item> result = new ArrayList<>();
 		String where = COLUMN_STARRED + "=" + 1;
+		Cursor cursor = db.query(TABLE_NAME, null, where, null, null, null, null, null);
+		while (cursor.moveToNext()) {
+			result.add(getRecord(cursor));
+		}
+		cursor.close();
+		return result;
+	}
+
+	public List<NewsParser.Item> getSearchResult(String query) {
+		List<NewsParser.Item> result = new ArrayList<>();
+		String where = COLUMN_TITLE + " LIKE \"%" + TextUtils.htmlEncode(query) + "%\" OR " +
+				COLUMN_LINK + " LIKE \"%" + TextUtils.htmlEncode(query) + "%\" OR " +
+				COLUMN_DESCRIPTION + " LIKE \"%" + TextUtils.htmlEncode(query) + "%\"";
 		Cursor cursor = db.query(TABLE_NAME, null, where, null, null, null, null, null);
 		while (cursor.moveToNext()) {
 			result.add(getRecord(cursor));

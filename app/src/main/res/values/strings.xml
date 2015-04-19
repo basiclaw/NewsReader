@@ -1,11 +1,14 @@
 <resources>
 	<string name="app_name">News Reader</string>
 	<string name="title_activity_item_detail">ItemDetailActivity</string>
+	<string name="title_activity_bookmark">BookmarkActivity</string>
+	<string name="title_activity_search_result">SearchResultActivity</string>
 
 	<string name="nav_title">NewsReader</string>
+	<string name="nav_bookmark">Bookmarks</string>
+	<string name="nav_search_result">Search Result</string>
 
 	<string name="action_home">Home</string>
-	<string name="action_profile">Profile</string>
 	<string name="action_bookmarks">Bookmarks</string>
 	<string name="action_exit">Exit</string>
 
@@ -13,9 +16,4 @@
 	<string name="placeholder_pubDate"><![CDATA[<pubDate>]]></string>
 	<string name="placeholder_category"><![CDATA[<category>]]></string>
 	<string name="placeholder_source"><![CDATA[<source>]]></string>
-	<string name="title_activity_bookmark">BookmarkActivity</string>
-
-	<string name="hello_world">Hello world!</string>
-	<string name="action_settings">Settings</string>
-	<string name="nav_bookmark">Bookmarks</string>
 </resources>

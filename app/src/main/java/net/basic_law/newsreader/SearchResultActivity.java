@@ -1,24 +1,35 @@
 package net.basic_law.newsreader;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
 
-public class BookmarkActivity extends Activity implements AdapterView.OnItemClickListener {
-	private BookmarkActivity self = this;
+public class SearchResultActivity extends Activity implements AdapterView.OnItemClickListener {
+	private SearchResultActivity self = this;
 	private List<NewsParser.Item> items = null;
-	NewsItemAdapter newsItemAdapter;
+	private static final String ITEM_EXTRA = "";
+	private NewsItemAdapter newsItemAdapter;
+	private String query;
 
-	private void setNewsItemAdapter() {
+	public static Intent getStartIntent(Context context, String query) {
+		Intent intent = new Intent(context, SearchResultActivity.class);
+		intent.putExtra(ITEM_EXTRA, query);
+		return intent;
+	}
+
+	private void setNewsItemAdapter(String query) {
 		ItemDAO itemDAO = new ItemDAO(self);
-		items = itemDAO.getBookmarks();
+		items = itemDAO.getSearchResult(query);
 		if (items != null) {
 			newsItemAdapter.clear();
 			for (NewsParser.Item item : items) {
@@ -30,14 +41,18 @@ public class BookmarkActivity extends Activity implements AdapterView.OnItemClic
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_bookmark);
+		setContentView(R.layout.activity_search_result);
 
 		ListView listView = (ListView) findViewById(R.id.feed_listview);
 		listView.setOnItemClickListener(self);
 		newsItemAdapter = new NewsItemAdapter(self, R.layout.news_item_lite);
 		listView.setAdapter(newsItemAdapter);
 
-		setNewsItemAdapter();
+		query = (String) getIntent().getSerializableExtra(ITEM_EXTRA);
+		if (query != null) {
+			((TextView) findViewById(R.id.search_keywords)).setText("Search result on: "+query);
+			setNewsItemAdapter(query);
+		}
 
 		// button onClickListener
 		(findViewById(R.id.nav_title)).setOnClickListener(new View.OnClickListener() {
@@ -50,12 +65,6 @@ public class BookmarkActivity extends Activity implements AdapterView.OnItemClic
 				finish();
 			}
 		});
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		setNewsItemAdapter();
 	}
 
 	@Override

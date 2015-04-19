@@ -26,6 +26,10 @@
             android:name=".BookmarkActivity"
             android:label="@string/title_activity_bookmark" >
         </activity>
+        <activity
+            android:name=".SearchResultActivity"
+            android:label="@string/title_activity_search_result" >
+        </activity>
     </application>
 
 </manifest>

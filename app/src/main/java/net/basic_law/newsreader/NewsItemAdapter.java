@@ -25,11 +25,25 @@ public class NewsItemAdapter extends BaseAdapter {
 
 	public NewsItemAdapter(Context context) {
 		inflater = LayoutInflater.from(context);
+		this.resource = R.layout.news_item;
+		this.newsItems = new ArrayList<>();
+	}
+
+	public NewsItemAdapter(Context context, int resource) {
+		inflater = LayoutInflater.from(context);
+		this.resource = resource;
 		this.newsItems = new ArrayList<>();
 	}
 
 	public NewsItemAdapter(Context context, List<NewsParser.Item> newsItems) {
 		inflater = LayoutInflater.from(context);
+		this.resource = R.layout.news_item;
+		this.newsItems = newsItems;
+	}
+
+	public NewsItemAdapter(Context context, int resource, List<NewsParser.Item> newsItems) {
+		inflater = LayoutInflater.from(context);
+		this.resource = resource;
 		this.newsItems = newsItems;
 	}
 
@@ -79,7 +93,7 @@ public class NewsItemAdapter extends BaseAdapter {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		if (newsItems.get(position).getThumbnail() != "") {
+		if (!newsItems.get(position).getThumbnail().equals("")) {
 			new NewsParser.ImageLoadTask(newsItems.get(position).getThumbnail(), viewHolder.item_thumbnail).execute();
 		} else {
 			viewHolder.item_thumbnail.setImageResource(R.drawable.no_thumb);

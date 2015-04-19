@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.squareup.okhttp.OkHttpClient;
@@ -99,6 +100,16 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 			public void onClick(View v) {
 				Toast.makeText(self, "reload", Toast.LENGTH_SHORT).show();
 				new GetFeedTask().execute();
+			}
+		});
+		((SearchView) findViewById(R.id.nav_search)).setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+			public boolean onQueryTextChange(String newText){
+				return false;
+			}
+			public boolean onQueryTextSubmit (String query){
+				Toast.makeText(self, "Search", Toast.LENGTH_SHORT).show();
+				startActivity(SearchResultActivity.getStartIntent(self, query));
+				return false;
 			}
 		});
 		(findViewById(R.id.nav_bookmark)).setOnClickListener(new View.OnClickListener() {

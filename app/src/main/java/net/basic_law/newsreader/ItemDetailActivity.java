@@ -15,8 +15,8 @@ import android.widget.Toast;
 public class ItemDetailActivity extends Activity {
 	private ItemDetailActivity self = this;
 	private static final String ITEM_EXTRA = "";
-	NewsParser.Item item;
-	ItemDAO itemDAO;
+	private NewsParser.Item item;
+	private ItemDAO itemDAO;
 
 	public static Intent getStartIntent(Context context, NewsParser.Item item) {
 		Intent intent = new Intent(context, ItemDetailActivity.class);
@@ -58,18 +58,14 @@ public class ItemDetailActivity extends Activity {
 		(findViewById(R.id.add_to_bookmark)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				if (item.getStarred() == 0){
-					System.out.println("HERE 0");
 					// add to bookmarks
 					item.setStarred((short) 1);
-					System.out.println(item.getStarred());
 					itemDAO.update(item);
 					Toast.makeText(self, "Bookmarks added", Toast.LENGTH_SHORT).show();
 					((TextView) findViewById(R.id.add_to_bookmark)).setText("Remove from Bookmarks");
 				} else {
-					System.out.println("HERE 1");
 					// remove from bookmarks
 					item.setStarred((short) 0);
-					System.out.println(item.getStarred());
 					itemDAO.update(item);
 					Toast.makeText(self, "Bookmarks removed", Toast.LENGTH_SHORT).show();
 					((TextView) findViewById(R.id.add_to_bookmark)).setText("Add to Bookmarks");

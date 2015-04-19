@@ -26,7 +26,7 @@
 			android:background="#00000000"
 			android:padding="0dp"
 			android:src="@drawable/logo"
-			android:text="@string/nav_bookmark"/>
+			android:text="@string/nav_search_result"/>
 
 		<ImageButton
 			android:id="@+id/nav_back"
@@ -49,7 +49,6 @@
 			android:background="#00000000"
 			android:padding="0dp"
 			android:visibility="invisible"/>
-
 	</RelativeLayout>
 
 	<RelativeLayout
@@ -59,12 +58,18 @@
 		android:layout_alignParentBottom="true"
 		android:layout_below="@+id/layout_nav">
 
+		<TextView
+			android:id="@+id/search_keywords"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignParentStart="true"
+			android:layout_alignParentTop="true"/>
+
 		<ListView
 			android:id="@+id/feed_listview"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:layout_alignParentStart="true"
-			android:layout_alignParentTop="true"/>
+			android:layout_below="@+id/search_keywords"/>
 	</RelativeLayout>
-
 </RelativeLayout>
