@@ -14,7 +14,7 @@ import java.util.Locale;
 
 public class ItemDAO {
 	//Table name
-	public static final String TABLE_NAME = "All News";
+	public static final String TABLE_NAME = "all_news";
 	public static final String KEY_ID = "id";
 
 	//Column name
@@ -25,6 +25,7 @@ public class ItemDAO {
 	public static final String COLUMN_PUBDATE = "pubDate";
 	public static final String COLUMN_DESCRIPTION = "description";
 	public static final String COLUMN_THUMBNAIL = "thumbnail";
+	public static final String COLUMN_STARRED = "starred";
 
 	//Create Table command
 	public static final String CREATE_TABLE =
@@ -36,7 +37,8 @@ public class ItemDAO {
 					COLUMN_CATEGORY + "  TEXT, " +
 					COLUMN_PUBDATE + "  DATE, " +
 					COLUMN_DESCRIPTION + "  TEXT, " +
-					COLUMN_THUMBNAIL + "  TEXT)";
+					COLUMN_THUMBNAIL + "  TEXT, " +
+					COLUMN_STARRED + "  INTEGER)";
 
 	private SQLiteDatabase db;
 
@@ -54,12 +56,20 @@ public class ItemDAO {
 		cv.put(COLUMN_TITLE, item.getTitle());
 		cv.put(COLUMN_LINK, item.getLink());
 		cv.put(COLUMN_CATEGORY, item.getCategory());
-		cv.put(COLUMN_PUBDATE, ( new SimpleDateFormat("YYYY-MM-DD HH:MM:SS", Locale.ENGLISH) ).format( item.getPubDate() ));
+		cv.put(COLUMN_PUBDATE, (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)).format(item.getPubDate()));
 		cv.put(COLUMN_DESCRIPTION, item.getDescription());
 		cv.put(COLUMN_THUMBNAIL, item.getThumbnail());
+		cv.put(COLUMN_STARRED, item.getStarred());
 		long id = db.insert(TABLE_NAME, null, cv);
 		item.setID(id);
 		return item;
+	}
+
+	public void updateDatabase(List<NewsParser.Item> items) {
+		for (NewsParser.Item item : items) {
+			NewsParser.Item targetItem = this.getByLink(item.getLink());
+			if (targetItem == null) this.insert(item);
+		}
 	}
 
 	public boolean update(NewsParser.Item item) {
@@ -68,9 +78,10 @@ public class ItemDAO {
 		cv.put(COLUMN_TITLE, item.getTitle());
 		cv.put(COLUMN_LINK, item.getLink());
 		cv.put(COLUMN_CATEGORY, item.getCategory());
-		cv.put(COLUMN_PUBDATE, ( new SimpleDateFormat("YYYY-MM-DD HH:MM:SS", Locale.ENGLISH) ).format( item.getPubDate() ));
+		cv.put(COLUMN_PUBDATE, (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)).format(item.getPubDate()));
 		cv.put(COLUMN_DESCRIPTION, item.getDescription());
 		cv.put(COLUMN_THUMBNAIL, item.getThumbnail());
+		cv.put(COLUMN_STARRED, item.getStarred());
 
 		String where = KEY_ID + "=" + item.getID();
 
@@ -89,8 +100,7 @@ public class ItemDAO {
 
 	public List<NewsParser.Item> getAll() {
 		List<NewsParser.Item> result = new ArrayList<>();
-		Cursor cursor = db.query(
-				TABLE_NAME, null, null, null, null, null, null);
+		Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, null);
 
 		while (cursor.moveToNext()) {
 			result.add(getRecord(cursor));
@@ -103,8 +113,19 @@ public class ItemDAO {
 	public NewsParser.Item get(long id) {
 		NewsParser.Item item = null;
 		String where = KEY_ID + "=" + id;
-		Cursor result = db.query(
-				TABLE_NAME, null, where, null, null, null, null, null);
+		Cursor result = db.query(TABLE_NAME, null, where, null, null, null, null, null);
+
+		if (result.moveToFirst()) {
+			item = getRecord(result);
+		}
+		result.close();
+		return item;
+	}
+
+	public NewsParser.Item getByLink(String link) {
+		NewsParser.Item item = null;
+		String where = COLUMN_LINK + "=\"" + link + "\"";
+		Cursor result = db.query(TABLE_NAME, null, where, null, null, null, null, null);
 
 		if (result.moveToFirst()) {
 			item = getRecord(result);
@@ -116,7 +137,7 @@ public class ItemDAO {
 	// cursor => object
 	public NewsParser.Item getRecord(Cursor cursor) {
 		// return type
-		NewsParser.Item result = null;
+		NewsParser.Item result = new NewsParser.Item();
 
 		result.setID(cursor.getLong(0));
 		result.setSource0(cursor.getString(1));
@@ -125,13 +146,14 @@ public class ItemDAO {
 		result.setCategory(cursor.getString(4));
 		Date pubDate;
 		try {
-			pubDate = ( new SimpleDateFormat("YYYY-MM-DD HH:MM:SS", Locale.ENGLISH) ).parse( cursor.getString(5) );
+			pubDate = (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)).parse(cursor.getString(5));
 		} catch (ParseException e) {
 			pubDate = new Date(1970, 1, 1, 0, 0, 0);
 		}
 		result.setPubDate(pubDate);
 		result.setDescription(cursor.getString(6));
 		result.setThumbnail(cursor.getString(7));
+		result.setStarred(cursor.getShort(8));
 		return result;
 	}
 

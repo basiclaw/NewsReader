@@ -7,16 +7,16 @@
 		android:id="@+id/item_thumbnail"
 		android:layout_width="70dp"
 		android:layout_height="70dp"
+		android:layout_margin="5dp"
 		android:adjustViewBounds="false"
-		android:background="@drawable/no_thumb"
-		android:layout_margin="5dp"/>
+		/>
 
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 				  android:layout_width="fill_parent"
 				  android:layout_height="wrap_content"
-				  android:orientation="vertical"
+				  android:layout_margin="5dp"
 				  android:minHeight="70dp"
-				  android:layout_margin="5dp">
+				  android:orientation="vertical">
 
 		<TextView
 			android:id="@+id/item_title"
@@ -24,7 +24,7 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:text="@string/placeholder_title"
-			android:textSize = "18sp"
+			android:textSize="18sp"
 			android:textStyle="bold"/>
 
 		<TextView
@@ -32,16 +32,16 @@
 			xmlns:android="http://schemas.android.com/apk/res/android"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textSize = "12sp"
-			android:text="@string/placeholder_pubDate"
+			android:layout_gravity="right"
 			android:layout_marginTop="10dp"
-			android:layout_gravity="right"/>
+			android:text="@string/placeholder_pubDate"
+			android:textSize="12sp"/>
 
 		<LinearLayout
-			android:orientation="horizontal"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="right"
+			android:orientation="horizontal"
 			>
 
 			<TextView
@@ -49,18 +49,18 @@
 				xmlns:android="http://schemas.android.com/apk/res/android"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:layout_gravity="right"
 				android:text="@string/placeholder_source"
-				android:textSize = "12sp"
-				android:layout_gravity="right"/>
+				android:textSize="12sp"/>
 
 			<TextView
 				android:id="@+id/item_category"
 				xmlns:android="http://schemas.android.com/apk/res/android"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:layout_marginLeft="5dp"
 				android:text="@string/placeholder_category"
-				android:textSize = "12sp"
-				android:layout_marginLeft="5dp"/>
+				android:textSize="12sp"/>
 		</LinearLayout>
 
 	</LinearLayout>

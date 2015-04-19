@@ -2,14 +2,54 @@
 				xmlns:tools="http://schemas.android.com/tools"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				tools:context=".MainActivity">
-
+				tools:context=".MainActivity"
+				android:background="#40ffcc00">
+	<RelativeLayout
+		android:id="@+id/layout_nav"
+		android:layout_width="fill_parent"
+		android:layout_height="50dp"
+		android:layout_alignParentStart="true"
+		android:layout_alignParentTop="true"
+		android:orientation="horizontal"
+		android:weightSum="1"
+		android:background="#ffffcc00">
+		<ImageButton
+			android:id="@+id/nav_back"
+			android:layout_width="50dp"
+			android:layout_height="fill_parent"
+			android:layout_alignParentStart="true"
+			android:layout_centerVertical="true"
+			android:padding="0dp"
+			android:layout_margin="0dp"
+			android:src="@drawable/back"/>
+		<Button
+			android:id="@+id/nav_title"
+			android:layout_width="wrap_content"
+			android:layout_height="fill_parent"
+			android:text="@string/nav_title"
+			android:layout_alignParentTop="true"
+			android:layout_toStartOf="@+id/nav_none"
+			android:layout_toEndOf="@+id/nav_back"
+			android:padding="0dp"
+			android:layout_margin="0dp"
+			android:background="#00ffffff"/>
+		<ImageButton
+			android:id="@+id/nav_none"
+			android:layout_width="50dp"
+			android:layout_height="fill_parent"
+			android:layout_alignParentEnd="true"
+			android:layout_centerVertical="true"
+			android:padding="0dp"
+			android:layout_margin="0dp"
+			android:src="#ffffffff"
+			android:visibility="invisible"/>
+	</RelativeLayout>
 	<LinearLayout
 		android:id="@+id/layout_main"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:layout_above="@+id/layout_nav"
-		android:layout_alignParentTop="true"
+		android:layout_below="@+id/layout_nav"
+		android:layout_alignParentBottom="true"
 		android:orientation="horizontal">
 
 		<WebView
@@ -19,48 +59,4 @@
 			android:layout_height="fill_parent"/>
 
 	</LinearLayout>
-
-	<RelativeLayout
-		android:id="@+id/layout_nav"
-		android:layout_width="fill_parent"
-		android:layout_height="70dp"
-		android:layout_alignParentBottom="true"
-		android:layout_alignParentStart="true"
-		android:orientation="horizontal"
-		android:weightSum="1">
-
-		<Button
-			android:id="@+id/nav_profile"
-			android:layout_width="wrap_content"
-			android:layout_height="fill_parent"
-			android:layout_alignParentStart="true"
-			android:layout_centerVertical="true"
-			android:layout_margin="0dp"
-			android:layout_toStartOf="@+id/nav_home"
-			android:padding="0dp"
-			android:text="@string/nav_profile"/>
-
-		<ImageButton
-			android:id="@+id/nav_home"
-			android:layout_width="100dp"
-			android:layout_height="fill_parent"
-			android:layout_alignParentTop="true"
-			android:layout_centerHorizontal="true"
-			android:layout_margin="0dp"
-			android:padding="0dp"
-			android:src="#ffff0000"
-			android:text="@string/nav_home"/>
-
-		<Button
-			android:id="@+id/nav_bookmarks"
-			android:layout_width="wrap_content"
-			android:layout_height="fill_parent"
-			android:layout_alignParentEnd="true"
-			android:layout_centerVertical="true"
-			android:layout_margin="0dp"
-			android:layout_toEndOf="@+id/nav_home"
-			android:padding="0dp"
-			android:text="@string/nav_bookmarks"/>
-	</RelativeLayout>
-
 </RelativeLayout>

@@ -30,26 +30,19 @@ public class ItemDetailActivity extends Activity {
 		WebView itemDetail = (WebView) findViewById(R.id.item_description);
 		NewsParser.Item item = (NewsParser.Item) getIntent().getSerializableExtra(ITEM_EXTRA);
 		if (item != null) {
-			itemDetail.loadDataWithBaseURL("", item.getDescription(), "text/html", "UTF-8", "");
+			itemDetail.loadDataWithBaseURL("", item.getNewsContent(), "text/html", "UTF-8", "");
 		}
 
 		// button onClickListener
-		((ImageButton) findViewById(R.id.nav_home)).setOnClickListener(new View.OnClickListener() {
+		(findViewById(R.id.nav_title)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Toast.makeText(self, "test_home", Toast.LENGTH_SHORT).show();
-				startActivity(new Intent(self, MainActivity.class));
+				//Toast.makeText(self, "reload", Toast.LENGTH_SHORT).show();
 			}
 		});
-
-		((Button) findViewById(R.id.nav_profile)).setOnClickListener(new View.OnClickListener() {
+		(findViewById(R.id.nav_back)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Toast.makeText(self, "test_profile", Toast.LENGTH_SHORT).show();
-			}
-		});
-
-		((Button) findViewById(R.id.nav_bookmarks)).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				Toast.makeText(self, "test_bookmarks", Toast.LENGTH_SHORT).show();
+				Toast.makeText(self, "button_back", Toast.LENGTH_SHORT).show();
+				finish();
 			}
 		});
 	}

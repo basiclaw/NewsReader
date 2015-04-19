@@ -1,10 +1,12 @@
 package net.basic_law.newsreader;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ public class NewsItemAdapter extends BaseAdapter {
 	private List<NewsParser.Item> newsItems;
 
 	private class ViewHolder {
+		ImageView item_thumbnail;
 		TextView item_title, item_category, item_pubDate, item_source;
 	}
 
@@ -67,6 +70,7 @@ public class NewsItemAdapter extends BaseAdapter {
 		if (convertView == null) {
 			convertView = inflater.inflate(resource, null);
 			viewHolder = new ViewHolder();
+			viewHolder.item_thumbnail = (ImageView) convertView.findViewById(R.id.item_thumbnail);
 			viewHolder.item_title = (TextView) convertView.findViewById(R.id.item_title);
 			viewHolder.item_category = (TextView) convertView.findViewById(R.id.item_category);
 			viewHolder.item_pubDate = (TextView) convertView.findViewById(R.id.item_pubDate);
@@ -75,7 +79,11 @@ public class NewsItemAdapter extends BaseAdapter {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-
+		if (newsItems.get(position).getThumbnail() != "") {
+			new NewsParser.ImageLoadTask(newsItems.get(position).getThumbnail(), viewHolder.item_thumbnail).execute();
+		} else {
+			viewHolder.item_thumbnail.setImageResource(R.drawable.no_thumb);
+		}
 		viewHolder.item_title.setText(newsItems.get(position).getTitle());
 		viewHolder.item_category.setText(newsItems.get(position).getCategory());
 		viewHolder.item_pubDate.setText(newsItems.get(position).getPubDateString());

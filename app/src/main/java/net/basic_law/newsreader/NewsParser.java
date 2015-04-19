@@ -1,6 +1,10 @@
 package net.basic_law.newsreader;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.util.Xml;
+import android.widget.ImageView;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -8,6 +12,8 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,11 +28,58 @@ public class NewsParser {
 	private static final String ns = null;
 	private String[] source = null;
 
+	public static class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
+
+		private String url;
+		private ImageView imageView;
+
+		public ImageLoadTask(String url, ImageView imageView) {
+			this.url = url;
+			this.imageView = imageView;
+		}
+
+		@Override
+		protected Bitmap doInBackground(Void... params) {
+			try {
+				URL urlConnection = new URL(url);
+				HttpURLConnection connection = (HttpURLConnection) urlConnection
+						.openConnection();
+				connection.setDoInput(true);
+				connection.connect();
+				InputStream input = connection.getInputStream();
+				Bitmap myBitmap = BitmapFactory.decodeStream(input);
+				return myBitmap;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Bitmap result) {
+			super.onPostExecute(result);
+			imageView.setImageBitmap(result);
+		}
+	}
+
 	public static class Item implements Serializable {
 		private long id;
 		private String[] source;
 		private String title, link, category, description, thumbnail;
+		private short starred;
 		private Date pubDate;
+
+		public Item() {
+			this.id = -1;
+			this.source = new String[2];
+			this.title = "";
+			this.link = "";
+			this.category = "";
+			this.pubDate = null;
+			this.description = "";
+			this.thumbnail = "";
+			this.starred = 0;
+		}
 
 		public Item(String[] source, String title, String link, String category, Date pubDate, String description) {
 			this.id = -1;
@@ -37,70 +90,110 @@ public class NewsParser {
 			this.pubDate = pubDate;
 			this.description = description.replace("=\"//", "=\"http://");
 			this.thumbnail = "";
-			// this.thumbnail = this.description.substring( this.description.indexOf( "<img src=\"" )+10, this.description.indexOf( "\" alt=\"\" border=\"1\" " ) );
+			int imgPos = this.description.indexOf("<img src=\"");
+			if (imgPos != -1) {
+				this.thumbnail = this.description.substring(imgPos + 10, this.description.indexOf("\"", imgPos + 10));
+			}
+			this.starred = 0;
 		}
 
-		public void setID(long id){
+		public void setID(long id) {
 			this.id = id;
 		}
+
 		public void setSource0(String sourceTitle) {
 			this.source[0] = sourceTitle;
 		}
+
 		public void setSource1(String sourceUrl) {
 			this.source[1] = sourceUrl;
 		}
+
 		public void setTitle(String title) {
 			this.title = title;
 		}
+
 		public void setLink(String link) {
 			this.link = link;
 		}
+
 		public void setCategory(String category) {
 			this.category = category;
 		}
+
 		public void setPubDate(Date pubDate) {
 			this.pubDate = pubDate;
 		}
+
 		public void setPubDateString(String pubDateString) {
 			try {
-				this.pubDate = ( new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH) ).parse( pubDateString );
+				this.pubDate = (new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH)).parse(pubDateString);
 			} catch (ParseException e) {
 				this.pubDate = new Date(1970, 1, 1, 0, 0, 0);
 			}
 		}
+
 		public void setDescription(String description) {
 			this.description = description;
 		}
+
 		public void setThumbnail(String thumbnail) {
 			this.thumbnail = thumbnail;
+		}
+
+		public void setStarred(short starred) {
+			this.starred = starred;
 		}
 
 		public long getID() {
 			return this.id;
 		}
+
 		public String[] getSource() {
 			return this.source;
 		}
+
 		public String getTitle() {
 			return this.title;
 		}
+
 		public String getLink() {
 			return this.link;
 		}
+
 		public String getCategory() {
 			return this.category;
 		}
+
 		public Date getPubDate() {
 			return this.pubDate;
 		}
+
 		public String getPubDateString() {
-			return ( new SimpleDateFormat("dd MMM yyyy (EEE) HH:mm:ss", Locale.ENGLISH) ).format( this.pubDate );
+			return (new SimpleDateFormat("dd MMM yyyy (EEE) HH:mm:ss", Locale.ENGLISH)).format(this.pubDate);
 		}
+
 		public String getDescription() {
 			return this.description;
 		}
+		public String getNewsContent() {
+			return "<div>" +
+				"<h3>" + this.getTitle() + "</h3>" +
+				"<div class=\"row\">" +
+					"<div style=\"color: #909090; font-size: 14px;\">" + this.getPubDateString() + "</div>" +
+					"<div style=\"color: #909090; font-size: 14px;\">" + this.getSource()[0] + " " + this.getCategory() + "</div>" +
+				"</div>" +
+				"<div class=\"row\" style=\"padding-top: 1em\">" +
+					this.getDescription() +
+				"</div>" +
+			"</div>";
+		}
 		public String getThumbnail() {
 			return this.thumbnail;
+		}
+
+		public short getStarred() {
+			return this.starred;
 		}
 
 		@Override
@@ -196,7 +289,7 @@ public class NewsParser {
 				case "pubDate":
 					try {
 						String pubDateString = readRequiredTag(parser, name).trim();
-						pubDate = ( new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH) ).parse( pubDateString );
+						pubDate = (new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH)).parse(pubDateString);
 					} catch (ParseException e) {
 						pubDate = new Date(1970, 1, 1, 0, 0, 0);
 					}

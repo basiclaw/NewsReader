@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.facebook.FacebookSdk;
-
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
 	private MainActivity self = this;
 	private List<NewsParser.Item> items = null;
@@ -35,12 +33,12 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 				{"Google", "https://news.google.com/news?pz=1&cf=all&ned=hk&hl=zh-TW&output=rss"},
 				{"Oriental Daily", "http://orientaldaily.on.cc/rss/news.xml"},
 				{"Apple Daily", "http://rss.appleactionews.com/rss.xml"},
-				{"MingPao", "http://news.mingpao.com/cfm/rss.cfm"},
-				{"Yahoo News", "https://hk.news.yahoo.com/sitemap/"},
-				{"RTHK", "http://rthk.hk/text/chi/news/rss.htm"},
+				{"MingPao", "http://news.mingpao.com/rss/pns/s00001.xml"},
+				{"Yahoo News", "https://hk.news.yahoo.com/rss/hong-kong "},
+				{"RTHK", "http://www.rthk.org.hk/rthk/news/rss/c_expressnews.xml"},
 				{"HK GOV", "http://www.gov.hk/tc/about/rss.htm"},
 				{"The Standard", "http://www.thestandard.com.hk/newsfeed/latest/news.xml"},
-				{"SCMP", "http://www.scmp.com/rss"},
+				{"SCMP", "http://www.scmp.com/rss/2/feed"},
 				{"Wall Street Journal", "http://online.wsj.com/xml/rss/3_8070.xml"}
 		};
 
@@ -55,11 +53,14 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 					try {
 						items.addAll(new NewsParser().parse(src, response.body().byteStream()));
 					} catch (XmlPullParserException e) {
-						e.printStackTrace();
+						System.err.println("Exception throw in Main Activity when loading " + src[0]);
 					}
 				}
 
 				Collections.sort(items, new NewsParser.ItemComparator());
+				ItemDAO itemDAO = new ItemDAO(self);
+				itemDAO.updateDatabase(items);
+				items = itemDAO.getAll();
 
 				return items;
 			} catch (IOException e) {
@@ -71,7 +72,10 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 		@Override
 		protected void onPostExecute(List<NewsParser.Item> items) {
 			if (items != null) {
-				newsItemAdapter.clear().addAll(items);
+				newsItemAdapter.clear();
+				for (NewsParser.Item item : items) {
+					newsItemAdapter.add(item);
+				}
 			}
 		}
 	}
@@ -89,20 +93,15 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 		new GetFeedTask().execute();
 
 		// button onClickListener
-		((ImageButton) findViewById(R.id.nav_home)).setOnClickListener(new View.OnClickListener() {
+		(findViewById(R.id.nav_title)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				Toast.makeText(self, "reload", Toast.LENGTH_SHORT).show();
 				new GetFeedTask().execute();
 			}
 		});
-		((Button) findViewById(R.id.nav_profile)).setOnClickListener(new View.OnClickListener() {
+		(findViewById(R.id.nav_bookmarks)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Toast.makeText(self, "test_profile", Toast.LENGTH_SHORT).show();
-			}
-		});
-		((Button) findViewById(R.id.nav_bookmarks)).setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				Toast.makeText(self, "test_bookmarks", Toast.LENGTH_SHORT).show();
+				Toast.makeText(self, "button_bookmarks", Toast.LENGTH_SHORT).show();
 			}
 		});
 	}
