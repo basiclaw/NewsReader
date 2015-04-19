@@ -14,7 +14,6 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -90,9 +89,7 @@ public class NewsParser {
 			this.description = description.replace("=\"//", "=\"http://");
 			this.thumbnail = "";
 			int imgPos = this.description.indexOf("<img src=\"");
-			if (imgPos != -1) {
-				this.thumbnail = this.description.substring(imgPos + 10, this.description.indexOf("\"", imgPos + 10));
-			}
+			if (imgPos != -1) this.thumbnail = this.description.substring(imgPos + 10, this.description.indexOf("\"", imgPos + 10));
 			this.starred = 0;
 		}
 
@@ -195,10 +192,6 @@ public class NewsParser {
 
 		public short getStarred() {
 			return this.starred;
-		}
-
-		public String getUID() {
-			return this.source[0]+"."+((new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)).format(this.pubDate))+"."+this.title;
 		}
 
 		@Override

@@ -45,17 +45,17 @@ public class ItemDetailActivity extends Activity {
 		}
 
 		// button onClickListener
-		(findViewById(R.id.nav_title)).setOnClickListener(new View.OnClickListener() {
+		((ImageButton) findViewById(R.id.nav_logo)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				finish();
 			}
 		});
-		(findViewById(R.id.nav_back)).setOnClickListener(new View.OnClickListener() {
+		((ImageButton) findViewById(R.id.nav_back)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				finish();
 			}
 		});
-		(findViewById(R.id.add_to_bookmark)).setOnClickListener(new View.OnClickListener() {
+		((ImageButton) findViewById(R.id.add_to_bookmark)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				if (item.getStarred() == 0){
 					// add to bookmarks

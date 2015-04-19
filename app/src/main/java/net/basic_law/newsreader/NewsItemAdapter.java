@@ -24,25 +24,25 @@ public class NewsItemAdapter extends BaseAdapter {
 	}
 
 	public NewsItemAdapter(Context context) {
-		inflater = LayoutInflater.from(context);
+		this.inflater = LayoutInflater.from(context);
 		this.resource = R.layout.news_item;
 		this.newsItems = new ArrayList<>();
 	}
 
 	public NewsItemAdapter(Context context, int resource) {
-		inflater = LayoutInflater.from(context);
+		this.inflater = LayoutInflater.from(context);
 		this.resource = resource;
 		this.newsItems = new ArrayList<>();
 	}
 
 	public NewsItemAdapter(Context context, List<NewsParser.Item> newsItems) {
-		inflater = LayoutInflater.from(context);
+		this.inflater = LayoutInflater.from(context);
 		this.resource = R.layout.news_item;
 		this.newsItems = newsItems;
 	}
 
 	public NewsItemAdapter(Context context, int resource, List<NewsParser.Item> newsItems) {
-		inflater = LayoutInflater.from(context);
+		this.inflater = LayoutInflater.from(context);
 		this.resource = resource;
 		this.newsItems = newsItems;
 	}

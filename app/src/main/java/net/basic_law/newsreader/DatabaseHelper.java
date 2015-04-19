@@ -26,15 +26,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		//create table
 		db.execSQL(ItemDAO.CREATE_TABLE);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		//Delete original table, do later
 		db.execSQL("DROP TABLE IF EXISTS " + ItemDAO.TABLE_NAME);
-		//call onCreate() to create new table
 		onCreate(db);
 	}
 

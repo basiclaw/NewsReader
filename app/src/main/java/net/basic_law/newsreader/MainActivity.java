@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -26,8 +27,8 @@ import java.util.List;
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
 	private MainActivity self = this;
 	private List<NewsParser.Item> items = null;
-	ItemDAO itemDAO;
-	NewsItemAdapter newsItemAdapter;
+	private ItemDAO itemDAO;
+	private 	NewsItemAdapter newsItemAdapter;
 
 	private class GetFeedTask extends AsyncTask<Void, Void, List<NewsParser.Item>> {
 		private String[][] sources = {
@@ -48,10 +49,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 			try {
 				List<NewsParser.Item> incoming = new ArrayList<>();
 				for (String[] src : this.sources) {
-					Request request = new Request.Builder().url(src[1]).build();
-					Response response = new OkHttpClient().newCall(request).execute();
-
 					try {
+						Request request = new Request.Builder().url(src[1]).build();
+						Response response = new OkHttpClient().newCall(request).execute();
 						incoming.addAll(new NewsParser().parse(src, response.body().byteStream()));
 					} catch (XmlPullParserException e) {
 						System.err.println("Exception throw in Main Activity when loading " + src[0]);
@@ -74,9 +74,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 		protected void onPostExecute(List<NewsParser.Item> items) {
 			if (items != null) {
 				newsItemAdapter.clear();
-				for (NewsParser.Item item : items) {
-					newsItemAdapter.add(item);
-				}
+				for (NewsParser.Item item : items) newsItemAdapter.add(item);
 			}
 		}
 	}
@@ -96,9 +94,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 		new GetFeedTask().execute();
 
 		// button onClickListener
-		(findViewById(R.id.nav_title)).setOnClickListener(new View.OnClickListener() {
+		((ImageButton) findViewById(R.id.nav_logo)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Toast.makeText(self, "reload", Toast.LENGTH_SHORT).show();
+				Toast.makeText(self, "Reloading...", Toast.LENGTH_SHORT).show();
 				new GetFeedTask().execute();
 			}
 		});
@@ -107,14 +105,12 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 				return false;
 			}
 			public boolean onQueryTextSubmit (String query){
-				Toast.makeText(self, "Search", Toast.LENGTH_SHORT).show();
 				startActivity(SearchResultActivity.getStartIntent(self, query));
 				return false;
 			}
 		});
-		(findViewById(R.id.nav_bookmark)).setOnClickListener(new View.OnClickListener() {
+		((ImageButton) findViewById(R.id.nav_bookmark)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Toast.makeText(self, "button_bookmarks", Toast.LENGTH_SHORT).show();
 				startActivity(new Intent(self, BookmarkActivity.class));
 			}
 		});
@@ -129,7 +125,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		startActivity(ItemDetailActivity.getStartIntent(self, items.get(position)));
-		Toast.makeText(self, "item clicked", Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -142,7 +137,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 
-		if (id == R.id.action_home) {
+		if (id == R.id.action_exit) {
 			return true;
 		}
 

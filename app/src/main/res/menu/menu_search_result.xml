@@ -3,16 +3,6 @@
 	  xmlns:tools="http://schemas.android.com/tools"
 	  tools:context="net.basic_law.newsreader.SearchResultActivity">
 	<item
-		android:id="@+id/action_home"
-		android:orderInCategory="100"
-		android:title="@string/action_home"
-		app:showAsAction="never"/>
-	<item
-		android:id="@+id/action_bookmarks"
-		android:orderInCategory="100"
-		android:title="@string/action_bookmarks"
-		app:showAsAction="never"/>
-	<item
 		android:id="@+id/action_exit"
 		android:orderInCategory="100"
 		android:title="@string/action_exit"

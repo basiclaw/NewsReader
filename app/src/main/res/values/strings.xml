@@ -8,8 +8,6 @@
 	<string name="nav_bookmark">Bookmarks</string>
 	<string name="nav_search_result">Search Result</string>
 
-	<string name="action_home">Home</string>
-	<string name="action_bookmarks">Bookmarks</string>
 	<string name="action_exit">Exit</string>
 
 	<string name="placeholder_title"><![CDATA[<title>]]></string>

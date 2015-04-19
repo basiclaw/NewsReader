@@ -6,8 +6,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -21,9 +21,7 @@ public class BookmarkActivity extends Activity implements AdapterView.OnItemClic
 		items = itemDAO.getBookmarks();
 		if (items != null) {
 			newsItemAdapter.clear();
-			for (NewsParser.Item item : items) {
-				newsItemAdapter.add(item);
-			}
+			for (NewsParser.Item item : items) newsItemAdapter.add(item);
 		}
 	}
 
@@ -40,12 +38,17 @@ public class BookmarkActivity extends Activity implements AdapterView.OnItemClic
 		setNewsItemAdapter();
 
 		// button onClickListener
-		(findViewById(R.id.nav_title)).setOnClickListener(new View.OnClickListener() {
+		((ImageButton) findViewById(R.id.nav_logo)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				finish();
 			}
 		});
-		(findViewById(R.id.nav_back)).setOnClickListener(new View.OnClickListener() {
+		((ImageButton) findViewById(R.id.nav_back)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				finish();
+			}
+		});
+		((ImageButton) findViewById(R.id.nav_none)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				finish();
 			}
@@ -61,7 +64,6 @@ public class BookmarkActivity extends Activity implements AdapterView.OnItemClic
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		startActivity(ItemDetailActivity.getStartIntent(self, items.get(position)));
-		Toast.makeText(self, "item clicked", Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -74,7 +76,7 @@ public class BookmarkActivity extends Activity implements AdapterView.OnItemClic
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 
-		if (id == R.id.action_home) {
+		if (id == R.id.action_exit) {
 			return true;
 		}
 
