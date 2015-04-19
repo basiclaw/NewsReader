@@ -23,57 +23,84 @@ public class NewsParser {
 	private String[] source = null;
 
 	public static class Item implements Serializable {
-		public String[] source;
-		public String title, link, category, pubDateString, description, thumbnail;
-		public Date pubDate;
+		private long id;
+		private String[] source;
+		private String title, link, category, description, thumbnail;
+		private Date pubDate;
 
-		public Item(String[] source, String title, String link, String category, String pubDateString, String description) {
+		public Item(String[] source, String title, String link, String category, Date pubDate, String description) {
+			this.id = -1;
 			this.source = source;
 			this.title = title;
 			this.link = link;
 			this.category = category;
-			this.pubDateString = pubDateString;
+			this.pubDate = pubDate;
 			this.description = description.replace("=\"//", "=\"http://");
 			this.thumbnail = "";
 			// this.thumbnail = this.description.substring( this.description.indexOf( "<img src=\"" )+10, this.description.indexOf( "\" alt=\"\" border=\"1\" " ) );
+		}
+
+		public void setID(long id){
+			this.id = id;
+		}
+		public void setSource0(String sourceTitle) {
+			this.source[0] = sourceTitle;
+		}
+		public void setSource1(String sourceUrl) {
+			this.source[1] = sourceUrl;
+		}
+		public void setTitle(String title) {
+			this.title = title;
+		}
+		public void setLink(String link) {
+			this.link = link;
+		}
+		public void setCategory(String category) {
+			this.category = category;
+		}
+		public void setPubDate(Date pubDate) {
+			this.pubDate = pubDate;
+		}
+		public void setPubDateString(String pubDateString) {
 			try {
-				this.pubDate = ( new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH) ).parse(pubDateString);
-				this.pubDateString = ( new SimpleDateFormat("dd MMM yyyy (EEE) HH:mm:ss", Locale.ENGLISH) ).format( this.pubDate );
+				this.pubDate = ( new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH) ).parse( pubDateString );
 			} catch (ParseException e) {
 				this.pubDate = new Date(1970, 1, 1, 0, 0, 0);
 			}
 		}
+		public void setDescription(String description) {
+			this.description = description;
+		}
+		public void setThumbnail(String thumbnail) {
+			this.thumbnail = thumbnail;
+		}
 
+		public long getID() {
+			return this.id;
+		}
 		public String[] getSource() {
-			return source;
+			return this.source;
 		}
-
 		public String getTitle() {
-			return title;
+			return this.title;
 		}
-
 		public String getLink() {
-			return link;
+			return this.link;
 		}
-
 		public String getCategory() {
-			return category;
+			return this.category;
 		}
-
-		public String getPubDateString() {
-			return pubDateString;
-		}
-
-		public String getDescription() {
-			return description;
-		}
-
-		public String getThumbnail() {
-			return thumbnail;
-		}
-
 		public Date getPubDate() {
-			return pubDate;
+			return this.pubDate;
+		}
+		public String getPubDateString() {
+			return ( new SimpleDateFormat("dd MMM yyyy (EEE) HH:mm:ss", Locale.ENGLISH) ).format( this.pubDate );
+		}
+		public String getDescription() {
+			return this.description;
+		}
+		public String getThumbnail() {
+			return this.thumbnail;
 		}
 
 		@Override
@@ -151,7 +178,8 @@ public class NewsParser {
 
 	private Item readItem(XmlPullParser parser) throws IOException, XmlPullParserException {
 		parser.require(XmlPullParser.START_TAG, ns, "item");
-		String title = "", link = "", category = "", pubDate = "", description = "";
+		String title = "", link = "", category = "", description = "";
+		Date pubDate = null;
 		while (parser.next() != XmlPullParser.END_TAG) {
 			if (parser.getEventType() != XmlPullParser.START_TAG) continue;
 			String name = parser.getName();
@@ -166,7 +194,12 @@ public class NewsParser {
 					category = readRequiredTag(parser, name).trim();
 					break;
 				case "pubDate":
-					pubDate = readRequiredTag(parser, name).trim();
+					try {
+						String pubDateString = readRequiredTag(parser, name).trim();
+						pubDate = ( new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH) ).parse( pubDateString );
+					} catch (ParseException e) {
+						pubDate = new Date(1970, 1, 1, 0, 0, 0);
+					}
 					break;
 				case "description":
 					description = readRequiredTag(parser, name).trim();
