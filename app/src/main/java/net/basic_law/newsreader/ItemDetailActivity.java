@@ -58,14 +58,18 @@ public class ItemDetailActivity extends Activity {
 		(findViewById(R.id.add_to_bookmark)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				if (item.getStarred() == 0){
+					System.out.println("HERE 0");
 					// add to bookmarks
 					item.setStarred((short) 1);
+					System.out.println(item.getStarred());
 					itemDAO.update(item);
 					Toast.makeText(self, "Bookmarks added", Toast.LENGTH_SHORT).show();
 					((TextView) findViewById(R.id.add_to_bookmark)).setText("Remove from Bookmarks");
 				} else {
+					System.out.println("HERE 1");
 					// remove from bookmarks
 					item.setStarred((short) 0);
+					System.out.println(item.getStarred());
 					itemDAO.update(item);
 					Toast.makeText(self, "Bookmarks removed", Toast.LENGTH_SHORT).show();
 					((TextView) findViewById(R.id.add_to_bookmark)).setText("Add to Bookmarks");

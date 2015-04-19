@@ -42,8 +42,7 @@ public class NewsParser {
 		protected Bitmap doInBackground(Void... params) {
 			try {
 				URL urlConnection = new URL(url);
-				HttpURLConnection connection = (HttpURLConnection) urlConnection
-						.openConnection();
+				HttpURLConnection connection = (HttpURLConnection) urlConnection.openConnection();
 				connection.setDoInput(true);
 				connection.connect();
 				InputStream input = connection.getInputStream();
@@ -198,6 +197,10 @@ public class NewsParser {
 			return this.starred;
 		}
 
+		public String getUID() {
+			return this.source[0]+"."+((new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)).format(this.pubDate))+"."+this.title;
+		}
+
 		@Override
 		public String toString() {
 			return getTitle();
@@ -207,7 +210,7 @@ public class NewsParser {
 	public static class ItemComparator implements Comparator<Item> {
 		@Override
 		public int compare(Item item1, Item item2) {
-			return item2.getPubDate().compareTo(item1.getPubDate());
+			return item1.getPubDate().compareTo(item2.getPubDate());
 		}
 	}
 

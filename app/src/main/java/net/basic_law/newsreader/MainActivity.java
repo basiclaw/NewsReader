@@ -45,21 +45,21 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 		@Override
 		protected List<NewsParser.Item> doInBackground(Void... params) {
 			try {
-				items = new ArrayList<>();
+				List<NewsParser.Item> incoming = new ArrayList<>();
 				for (String[] src : this.sources) {
 					Request request = new Request.Builder().url(src[1]).build();
 					Response response = new OkHttpClient().newCall(request).execute();
 
 					try {
-						items.addAll(new NewsParser().parse(src, response.body().byteStream()));
+						incoming.addAll(new NewsParser().parse(src, response.body().byteStream()));
 					} catch (XmlPullParserException e) {
 						System.err.println("Exception throw in Main Activity when loading " + src[0]);
 					}
 				}
 
-				Collections.sort(items, new NewsParser.ItemComparator());
+				Collections.sort(incoming, new NewsParser.ItemComparator());
 
-				itemDAO.updateDatabase(items);
+				itemDAO.updateDatabase(incoming);
 				items = itemDAO.getAll();
 
 				return items;

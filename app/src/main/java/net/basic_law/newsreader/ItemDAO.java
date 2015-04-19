@@ -50,6 +50,13 @@ public class ItemDAO {
 		db.close();
 	}
 
+	public void updateDatabase(List<NewsParser.Item> items) {
+		for (NewsParser.Item item : items) {
+			NewsParser.Item targetItem = this.getByUnique(item.getSource()[0], (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)).format(item.getPubDate()), item.getTitle());
+			if (targetItem == null) this.insert(item);
+		}
+	}
+
 	public NewsParser.Item insert(NewsParser.Item item) {
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_SOURCE, item.getSource()[0]);
@@ -62,14 +69,8 @@ public class ItemDAO {
 		cv.put(COLUMN_STARRED, item.getStarred());
 		long id = db.insert(TABLE_NAME, null, cv);
 		item.setID(id);
+		System.out.println(id);
 		return item;
-	}
-
-	public void updateDatabase(List<NewsParser.Item> items) {
-		for (NewsParser.Item item : items) {
-			NewsParser.Item targetItem = this.getByLink(item.getLink());
-			if (targetItem == null) this.insert(item);
-		}
 	}
 
 	public boolean update(NewsParser.Item item) {
@@ -100,7 +101,8 @@ public class ItemDAO {
 
 	public List<NewsParser.Item> getAll() {
 		List<NewsParser.Item> result = new ArrayList<>();
-		Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, null);
+		String orderBy =  COLUMN_PUBDATE + " DESC";
+		Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, orderBy);
 
 		while (cursor.moveToNext()) {
 			result.add(getRecord(cursor));
@@ -122,9 +124,9 @@ public class ItemDAO {
 		return item;
 	}
 
-	public NewsParser.Item getByLink(String link) {
+	public NewsParser.Item getByUnique(String source, String pubDate, String title) {
 		NewsParser.Item item = null;
-		String where = COLUMN_LINK + "=\"" + link + "\"";
+		String where = COLUMN_SOURCE + "=\"" + source + "\" AND " + COLUMN_PUBDATE + "=\"" + pubDate + "\" AND " + COLUMN_TITLE + "=\"" + title + "\"";
 		Cursor cursor = db.query(TABLE_NAME, null, where, null, null, null, null, null);
 
 		if (cursor.moveToFirst()) {
