@@ -12,6 +12,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -78,6 +79,13 @@ public class NewsParser {
 		@Override
 		public String toString() {
 			return getTitle();
+		}
+	}
+
+	public static class ItemComparator implements Comparator<Item> {
+		@Override
+		public int compare(Item item1, Item item2) {
+			return item2.getPubDate().compareTo(item1.getPubDate());
 		}
 	}
 

@@ -23,13 +23,16 @@
 			xmlns:android="http://schemas.android.com/apk/res/android"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:text="@string/placeholder_title"/>
+			android:text="@string/placeholder_title"
+			android:textSize = "18sp"
+			android:textStyle="bold"/>
 
 		<TextView
 			android:id="@+id/item_pubDate"
 			xmlns:android="http://schemas.android.com/apk/res/android"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:textSize = "12sp"
 			android:text="@string/placeholder_pubDate"
 			android:layout_marginTop="10dp"
 			android:layout_gravity="right"/>
@@ -47,6 +50,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="@string/placeholder_source"
+				android:textSize = "12sp"
 				android:layout_gravity="right"/>
 
 			<TextView
@@ -55,6 +59,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="@string/placeholder_category"
+				android:textSize = "12sp"
 				android:layout_marginLeft="5dp"/>
 		</LinearLayout>
 

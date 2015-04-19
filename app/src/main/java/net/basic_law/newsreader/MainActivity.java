@@ -20,8 +20,10 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import com.facebook.FacebookSdk;
 
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
 	private MainActivity self = this;
@@ -56,6 +58,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 						e.printStackTrace();
 					}
 				}
+
+				Collections.sort(items, new NewsParser.ItemComparator());
+
 				return items;
 			} catch (IOException e) {
 				e.printStackTrace();

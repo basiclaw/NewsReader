@@ -2,6 +2,20 @@
 <items version="2" >
 
     <item
+        jar="D:\AndroidStudioProjects\NewsReader\app\build\intermediates\exploded-aar\com.facebook.android\facebook-android-sdk\4.0.0\classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0f254ec13d6671680482d2218f01ecf14dfa93e6">
+        <dex dex="D:\AndroidStudioProjects\NewsReader\app\build\intermediates\pre-dexed\debug\classes-7bfd6f45563791d53741f0c3ba72ca1e80614dc9.jar" />
+    </item>
+    <item
+        jar="C:\Users\Basic\.gradle\caches\modules-2\files-2.1\com.parse.bolts\bolts-android\1.1.4\129874135e6081269ace2312092031558865de12\bolts-android-1.1.4.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="129874135e6081269ace2312092031558865de12">
+        <dex dex="D:\AndroidStudioProjects\NewsReader\app\build\intermediates\pre-dexed\debug\bolts-android-1.1.4-2d6ba44973dd0a525d02a7ae56bbd7af74e08bcb.jar" />
+    </item>
+    <item
         jar="C:\Users\Basic\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp\okhttp\2.3.0\2e7bc7033dc2c8423e661224171b3133fb155b28\okhttp-2.3.0.jar"
         jumboMode="false"
         revision="21.1.2"
