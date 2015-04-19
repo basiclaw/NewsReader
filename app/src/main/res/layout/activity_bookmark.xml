@@ -2,67 +2,74 @@
 				xmlns:tools="http://schemas.android.com/tools"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				tools:context=".MainActivity"
-				android:background="#40ffcc00">
+				android:background="#40ffcc00"
+				tools:context=".MainActivity">
+
 	<RelativeLayout
 		android:id="@+id/layout_nav"
 		android:layout_width="fill_parent"
 		android:layout_height="50dp"
 		android:layout_alignParentStart="true"
 		android:layout_alignParentTop="true"
+		android:background="#ffffcc00"
 		android:orientation="horizontal"
-		android:weightSum="1"
-		android:background="#ffffcc00">
+		android:weightSum="1">
+
 		<Button
 			android:id="@+id/nav_title"
 			android:layout_width="wrap_content"
 			android:layout_height="fill_parent"
-			android:text="@string/nav_title"
-			android:layout_alignParentTop="true"
-			android:layout_toStartOf="@+id/nav_none"
+			android:layout_centerVertical="true"
+			android:layout_marginBottom="0dp"
+			android:layout_marginLeft="0dp"
+			android:layout_marginRight="0dp"
+			android:layout_marginTop="0dp"
 			android:layout_toEndOf="@+id/nav_back"
+			android:layout_toStartOf="@+id/nav_none"
+			android:background="#00ffffff"
 			android:padding="0dp"
-			android:layout_margin="0dp"
-			android:background="#00ffffff"/>
+			android:text="@string/nav_bookmark"
+			/>
+
 		<ImageButton
 			android:id="@+id/nav_back"
 			android:layout_width="50dp"
 			android:layout_height="fill_parent"
 			android:layout_alignParentStart="true"
 			android:layout_centerVertical="true"
-			android:padding="0dp"
 			android:layout_margin="0dp"
+			android:padding="0dp"
 			android:src="@drawable/back"/>
+
 		<ImageButton
 			android:id="@+id/nav_none"
 			android:layout_width="50dp"
 			android:layout_height="fill_parent"
 			android:layout_alignParentEnd="true"
 			android:layout_centerVertical="true"
-			android:padding="0dp"
 			android:layout_margin="0dp"
+			android:padding="0dp"
 			android:src="#ffffffff"
 			android:visibility="invisible"/>
+
 	</RelativeLayout>
+
 	<RelativeLayout
 		android:id="@+id/layout_main"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
 		android:layout_below="@+id/layout_nav"
-		>
-		<WebView
-			android:id="@+id/item_description"
-			xmlns:android="http://schemas.android.com/apk/res/android"
-			android:layout_width="fill_parent"
-			android:layout_height="fill_parent"
-			android:layout_above="@+id/button"/>
-		<Button
-			android:id="@+id/add_to_bookmark"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:text="Add to bookmarks"
-			android:layout_gravity="bottom"
-			android:layout_alignParentBottom="true"
-			android:layout_alignParentEnd="true"/>
+		android:orientation="vertical">
+
+		<ListView
+			android:id="@+id/feed_listview"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_alignParentStart="true"
+			android:layout_alignParentTop="true"/>
+
 	</RelativeLayout>
+
+
 </RelativeLayout>

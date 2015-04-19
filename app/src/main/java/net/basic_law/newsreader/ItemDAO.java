@@ -125,17 +125,17 @@ public class ItemDAO {
 	public NewsParser.Item getByLink(String link) {
 		NewsParser.Item item = null;
 		String where = COLUMN_LINK + "=\"" + link + "\"";
-		Cursor result = db.query(TABLE_NAME, null, where, null, null, null, null, null);
+		Cursor cursor = db.query(TABLE_NAME, null, where, null, null, null, null, null);
 
-		if (result.moveToFirst()) {
-			item = getRecord(result);
+		if (cursor.moveToFirst()) {
+			item = getRecord(cursor);
 		}
-		result.close();
+		cursor.close();
 		return item;
 	}
 
 	// cursor => object
-	public NewsParser.Item getRecord(Cursor cursor) {
+	private NewsParser.Item getRecord(Cursor cursor) {
 		// return type
 		NewsParser.Item result = new NewsParser.Item();
 
@@ -165,6 +165,17 @@ public class ItemDAO {
 			result = cursor.getInt(0);
 		}
 
+		return result;
+	}
+
+	public List<NewsParser.Item> getBookmarks() {
+		List<NewsParser.Item> result = new ArrayList<>();
+		String where = COLUMN_STARRED + "=" + 1;
+		Cursor cursor = db.query(TABLE_NAME, null, where, null, null, null, null, null);
+		while (cursor.moveToNext()) {
+			result.add(getRecord(cursor));
+		}
+		cursor.close();
 		return result;
 	}
 }

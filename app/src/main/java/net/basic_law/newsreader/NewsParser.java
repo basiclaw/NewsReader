@@ -176,18 +176,20 @@ public class NewsParser {
 		public String getDescription() {
 			return this.description;
 		}
+
 		public String getNewsContent() {
 			return "<div>" +
-				"<h3>" + this.getTitle() + "</h3>" +
-				"<div class=\"row\">" +
+					"<h3><a href=\""+ this.getLink() +"\" target=\"_blank\">" + this.getTitle() + "</a></h3>" +
+					"<div class=\"row\">" +
 					"<div style=\"color: #909090; font-size: 14px;\">" + this.getPubDateString() + "</div>" +
 					"<div style=\"color: #909090; font-size: 14px;\">" + this.getSource()[0] + " " + this.getCategory() + "</div>" +
-				"</div>" +
-				"<div class=\"row\" style=\"padding-top: 1em\">" +
+					"</div>" +
+					"<div class=\"row\" style=\"padding-top: 1em\">" +
 					this.getDescription() +
-				"</div>" +
-			"</div>";
+					"</div>" +
+					"</div>";
 		}
+
 		public String getThumbnail() {
 			return this.thumbnail;
 		}

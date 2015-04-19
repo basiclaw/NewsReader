@@ -8,12 +8,15 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
 public class ItemDetailActivity extends Activity {
 	private ItemDetailActivity self = this;
 	private static final String ITEM_EXTRA = "";
+	NewsParser.Item item;
+	ItemDAO itemDAO;
 
 	public static Intent getStartIntent(Context context, NewsParser.Item item) {
 		Intent intent = new Intent(context, ItemDetailActivity.class);
@@ -26,23 +29,48 @@ public class ItemDetailActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_item_detail);
 
+		itemDAO = new ItemDAO(self);
+
 		// set details for webView
 		WebView itemDetail = (WebView) findViewById(R.id.item_description);
-		NewsParser.Item item = (NewsParser.Item) getIntent().getSerializableExtra(ITEM_EXTRA);
+		item = (NewsParser.Item) getIntent().getSerializableExtra(ITEM_EXTRA);
 		if (item != null) {
 			itemDetail.loadDataWithBaseURL("", item.getNewsContent(), "text/html", "UTF-8", "");
+		}
+
+		if (item.getStarred() == 0){
+			((TextView) findViewById(R.id.add_to_bookmark)).setText("Add to Bookmarks");
+		}else{
+			((TextView) findViewById(R.id.add_to_bookmark)).setText("Remove from Bookmarks");
 		}
 
 		// button onClickListener
 		(findViewById(R.id.nav_title)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				//Toast.makeText(self, "reload", Toast.LENGTH_SHORT).show();
+				finish();
 			}
 		});
 		(findViewById(R.id.nav_back)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Toast.makeText(self, "button_back", Toast.LENGTH_SHORT).show();
 				finish();
+			}
+		});
+		(findViewById(R.id.add_to_bookmark)).setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				if (item.getStarred() == 0){
+					// add to bookmarks
+					item.setStarred((short) 1);
+					itemDAO.update(item);
+					Toast.makeText(self, "Bookmarks added", Toast.LENGTH_SHORT).show();
+					((TextView) findViewById(R.id.add_to_bookmark)).setText("Remove from Bookmarks");
+				} else {
+					// remove from bookmarks
+					item.setStarred((short) 0);
+					itemDAO.update(item);
+					Toast.makeText(self, "Bookmarks removed", Toast.LENGTH_SHORT).show();
+					((TextView) findViewById(R.id.add_to_bookmark)).setText("Add to Bookmarks");
+				}
+
 			}
 		});
 	}

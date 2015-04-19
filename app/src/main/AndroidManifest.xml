@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.basic_law.newsreader" >
+
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -19,6 +21,10 @@
         <activity
             android:name=".ItemDetailActivity"
             android:label="@string/title_activity_item_detail" >
+        </activity>
+        <activity
+            android:name=".BookmarkActivity"
+            android:label="@string/title_activity_bookmark" >
         </activity>
     </application>
 

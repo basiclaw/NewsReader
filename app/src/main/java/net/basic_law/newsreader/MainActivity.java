@@ -1,14 +1,13 @@
 package net.basic_law.newsreader;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -26,6 +25,7 @@ import java.util.List;
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
 	private MainActivity self = this;
 	private List<NewsParser.Item> items = null;
+	ItemDAO itemDAO;
 	NewsItemAdapter newsItemAdapter;
 
 	private class GetFeedTask extends AsyncTask<Void, Void, List<NewsParser.Item>> {
@@ -58,7 +58,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 				}
 
 				Collections.sort(items, new NewsParser.ItemComparator());
-				ItemDAO itemDAO = new ItemDAO(self);
+
 				itemDAO.updateDatabase(items);
 				items = itemDAO.getAll();
 
@@ -85,6 +85,8 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		itemDAO = new ItemDAO(self);
+
 		ListView listView = (ListView) findViewById(R.id.feed_listview);
 		listView.setOnItemClickListener(self);
 		newsItemAdapter = new NewsItemAdapter(self);
@@ -99,11 +101,18 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 				new GetFeedTask().execute();
 			}
 		});
-		(findViewById(R.id.nav_bookmarks)).setOnClickListener(new View.OnClickListener() {
+		(findViewById(R.id.nav_bookmark)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				Toast.makeText(self, "button_bookmarks", Toast.LENGTH_SHORT).show();
+				startActivity(new Intent(self, BookmarkActivity.class));
 			}
 		});
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		new GetFeedTask().execute();
 	}
 
 	@Override
