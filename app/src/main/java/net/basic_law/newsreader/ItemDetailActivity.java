@@ -55,7 +55,7 @@ public class ItemDetailActivity extends Activity {
 				finish();
 			}
 		});
-		((ImageButton) findViewById(R.id.add_to_bookmark)).setOnClickListener(new View.OnClickListener() {
+		((Button) findViewById(R.id.add_to_bookmark)).setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				if (item.getStarred() == 0){
 					// add to bookmarks
