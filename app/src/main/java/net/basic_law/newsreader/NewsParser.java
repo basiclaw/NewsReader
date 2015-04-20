@@ -3,6 +3,8 @@ package net.basic_law.newsreader;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.text.Html;
+import android.text.TextUtils;
 import android.util.Xml;
 import android.widget.ImageView;
 
@@ -86,10 +88,13 @@ public class NewsParser {
 			this.link = link;
 			this.category = category;
 			this.pubDate = pubDate;
-			this.description = description.replace("=\"//", "=\"http://");
+			description = Html.fromHtml(description).toString();
+			description = description.replace("=\"//", "=\"http://");
+			this.description = TextUtils.htmlEncode(description);
 			this.thumbnail = "";
-			int imgPos = this.description.indexOf("<img src=\"");
-			if (imgPos != -1) this.thumbnail = this.description.substring(imgPos + 10, this.description.indexOf("\"", imgPos + 10));
+			int imgPos = description.indexOf("<img src=\"");
+			if (imgPos != -1)
+				this.thumbnail = description.substring(imgPos + 10, description.indexOf("\"", imgPos + 10));
 			this.starred = 0;
 		}
 
@@ -121,14 +126,6 @@ public class NewsParser {
 			this.pubDate = pubDate;
 		}
 
-		public void setPubDateString(String pubDateString) {
-			try {
-				this.pubDate = (new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH)).parse(pubDateString);
-			} catch (ParseException e) {
-				this.pubDate = new Date(1970, 1, 1, 0, 0, 0);
-			}
-		}
-
 		public void setDescription(String description) {
 			this.description = description;
 		}
@@ -150,15 +147,15 @@ public class NewsParser {
 		}
 
 		public String getTitle() {
-			return this.title;
+			return Html.fromHtml(this.title).toString();
 		}
 
 		public String getLink() {
-			return this.link;
+			return Html.fromHtml(this.link).toString();
 		}
 
 		public String getCategory() {
-			return this.category;
+			return Html.fromHtml(this.category).toString();
 		}
 
 		public Date getPubDate() {
@@ -170,12 +167,12 @@ public class NewsParser {
 		}
 
 		public String getDescription() {
-			return this.description;
+			return Html.fromHtml(this.description).toString();
 		}
 
 		public String getNewsContent() {
-			return "<div>" +
-					"<h3><a href=\""+ this.getLink() +"\" target=\"_blank\">" + this.getTitle() + "</a></h3>" +
+			return "<div class=\"row\" style=\"padding: 15px;\">" +
+					"<h3><a href=\"" + this.getLink() + "\" target=\"_blank\">" + this.getTitle() + "</a></h3>" +
 					"<div class=\"row\">" +
 					"<div style=\"color: #909090; font-size: 14px;\">" + this.getPubDateString() + "</div>" +
 					"<div style=\"color: #909090; font-size: 14px;\">" + this.getSource()[0] + " " + this.getCategory() + "</div>" +
@@ -276,13 +273,13 @@ public class NewsParser {
 			String name = parser.getName();
 			switch (name) {
 				case "title":
-					title = readRequiredTag(parser, name).trim();
+					title = TextUtils.htmlEncode(readRequiredTag(parser, name).trim());
 					break;
 				case "link":
-					link = readRequiredTag(parser, name).trim();
+					link = TextUtils.htmlEncode(readRequiredTag(parser, name).trim());
 					break;
 				case "category":
-					category = readRequiredTag(parser, name).trim();
+					category = TextUtils.htmlEncode(readRequiredTag(parser, name).trim());
 					break;
 				case "pubDate":
 					try {
@@ -293,7 +290,7 @@ public class NewsParser {
 					}
 					break;
 				case "description":
-					description = readRequiredTag(parser, name).trim();
+					description = TextUtils.htmlEncode(readRequiredTag(parser, name).trim());
 					break;
 				default:
 					skip(parser);

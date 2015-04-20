@@ -53,7 +53,7 @@ public class ItemDAO {
 
 	public void updateDatabase(List<NewsParser.Item> items) {
 		for (NewsParser.Item item : items) {
-			NewsParser.Item targetItem = this.getByUnique(item.getSource()[0], (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)).format(item.getPubDate()), item.getTitle());
+			NewsParser.Item targetItem = this.getByUnique(item.getSource()[0], (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)).format(item.getPubDate()), TextUtils.htmlEncode(item.getTitle()));
 			if (targetItem == null) this.insert(item);
 		}
 	}
@@ -61,27 +61,27 @@ public class ItemDAO {
 	public NewsParser.Item insert(NewsParser.Item item) {
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_SOURCE, item.getSource()[0]);
-		cv.put(COLUMN_TITLE, item.getTitle());
-		cv.put(COLUMN_LINK, item.getLink());
-		cv.put(COLUMN_CATEGORY, item.getCategory());
+		cv.put(COLUMN_TITLE, TextUtils.htmlEncode(item.getTitle()));
+		cv.put(COLUMN_LINK, TextUtils.htmlEncode(item.getLink()));
+		cv.put(COLUMN_CATEGORY, TextUtils.htmlEncode(item.getCategory()));
 		cv.put(COLUMN_PUBDATE, (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)).format(item.getPubDate()));
-		cv.put(COLUMN_DESCRIPTION, item.getDescription());
+		cv.put(COLUMN_DESCRIPTION, TextUtils.htmlEncode(item.getDescription()));
 		cv.put(COLUMN_THUMBNAIL, item.getThumbnail());
 		cv.put(COLUMN_STARRED, item.getStarred());
 		long id = db.insert(TABLE_NAME, null, cv);
 		item.setID(id);
-		System.out.println(id);
+		System.out.println("New news #" + id);
 		return item;
 	}
 
 	public boolean update(NewsParser.Item item) {
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_SOURCE, item.getSource()[0]);
-		cv.put(COLUMN_TITLE, item.getTitle());
-		cv.put(COLUMN_LINK, item.getLink());
-		cv.put(COLUMN_CATEGORY, item.getCategory());
+		cv.put(COLUMN_TITLE, TextUtils.htmlEncode(item.getTitle()));
+		cv.put(COLUMN_LINK, TextUtils.htmlEncode(item.getLink()));
+		cv.put(COLUMN_CATEGORY, TextUtils.htmlEncode(item.getCategory()));
 		cv.put(COLUMN_PUBDATE, (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)).format(item.getPubDate()));
-		cv.put(COLUMN_DESCRIPTION, item.getDescription());
+		cv.put(COLUMN_DESCRIPTION, TextUtils.htmlEncode(item.getDescription()));
 		cv.put(COLUMN_THUMBNAIL, item.getThumbnail());
 		cv.put(COLUMN_STARRED, item.getStarred());
 
@@ -102,8 +102,8 @@ public class ItemDAO {
 
 	public List<NewsParser.Item> getAll() {
 		List<NewsParser.Item> result = new ArrayList<>();
-		String orderBy =  COLUMN_PUBDATE + " DESC";
-		Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, orderBy);
+		String orderBy = COLUMN_PUBDATE + " DESC, " + COLUMN_TITLE + " ASC";
+		Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, orderBy, null);
 
 		while (cursor.moveToNext()) {
 			result.add(getRecord(cursor));
@@ -127,7 +127,7 @@ public class ItemDAO {
 
 	public NewsParser.Item getByUnique(String source, String pubDate, String title) {
 		NewsParser.Item item = null;
-		String where = COLUMN_SOURCE + "=\"" + source + "\" AND " + COLUMN_PUBDATE + "=\"" + pubDate + "\" AND " + COLUMN_TITLE + "=\"" + TextUtils.htmlEncode(title) + "\"";
+		String where = COLUMN_SOURCE + "=\"" + source + "\" AND " + COLUMN_PUBDATE + "=\"" + pubDate + "\" AND " + COLUMN_TITLE + "=\"" + title + "\"";
 		Cursor cursor = db.query(TABLE_NAME, null, where, null, null, null, null, null);
 
 		if (cursor.moveToFirst()) {
@@ -174,7 +174,8 @@ public class ItemDAO {
 	public List<NewsParser.Item> getBookmarks() {
 		List<NewsParser.Item> result = new ArrayList<>();
 		String where = COLUMN_STARRED + "=" + 1;
-		Cursor cursor = db.query(TABLE_NAME, null, where, null, null, null, null, null);
+		String orderBy = COLUMN_PUBDATE + " DESC, " + COLUMN_TITLE + " ASC";
+		Cursor cursor = db.query(TABLE_NAME, null, where, null, null, null, orderBy, null);
 		while (cursor.moveToNext()) {
 			result.add(getRecord(cursor));
 		}
@@ -185,9 +186,9 @@ public class ItemDAO {
 	public List<NewsParser.Item> getSearchResult(String query) {
 		List<NewsParser.Item> result = new ArrayList<>();
 		String where = COLUMN_TITLE + " LIKE \"%" + TextUtils.htmlEncode(query) + "%\" OR " +
-				COLUMN_LINK + " LIKE \"%" + TextUtils.htmlEncode(query) + "%\" OR " +
 				COLUMN_DESCRIPTION + " LIKE \"%" + TextUtils.htmlEncode(query) + "%\"";
-		Cursor cursor = db.query(TABLE_NAME, null, where, null, null, null, null, null);
+		String orderBy = COLUMN_PUBDATE + " DESC, " + COLUMN_TITLE + " ASC";
+		Cursor cursor = db.query(TABLE_NAME, null, where, null, null, null, orderBy, null);
 		while (cursor.moveToNext()) {
 			result.add(getRecord(cursor));
 		}

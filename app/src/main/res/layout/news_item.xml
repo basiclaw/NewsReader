@@ -1,14 +1,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			  android:layout_width="fill_parent"
-			  android:layout_height="fill_parent"
-			  android:orientation="horizontal">
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="horizontal">
 
 	<ImageView
 		android:id="@+id/item_thumbnail"
 		android:layout_width="70dp"
 		android:layout_height="70dp"
 		android:layout_margin="5dp"
-		android:adjustViewBounds="false"/>
+		android:adjustViewBounds="false" />
 
 	<LinearLayout
 		android:layout_width="fill_parent"
@@ -17,45 +17,71 @@
 		android:minHeight="70dp"
 		android:orientation="vertical">
 
-		<TextView
-			android:id="@+id/item_title"
+		<RelativeLayout
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:text="@string/placeholder_title"
-			android:textSize="18sp"
-			android:textStyle="bold"/>
-
-		<TextView
-			android:id="@+id/item_pubDate"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="right"
-			android:layout_marginTop="10dp"
-			android:text="@string/placeholder_pubDate"
-			android:textSize="12sp"/>
-
-		<LinearLayout
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="right"
-			android:orientation="horizontal">
+			android:layout_height="fill_parent">
 
 			<TextView
-				android:id="@+id/item_source"
-				android:layout_width="wrap_content"
+				android:id="@+id/item_title"
+				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
-				android:layout_gravity="right"
-				android:text="@string/placeholder_source"
-				android:textSize="12sp"/>
+				android:layout_toStartOf="@+id/item_starred"
+				android:text="@string/placeholder_title"
+				android:textSize="18sp"
+				android:textStyle="bold" />
+
+			<ImageView
+				android:id="@+id/item_starred"
+				android:layout_width="15dp"
+				android:layout_height="15dp"
+				android:layout_alignParentEnd="true"
+				android:layout_alignParentTop="true" />
+		</RelativeLayout>
+
+		<RelativeLayout
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:layout_marginRight="15dp"
+			android:layout_marginTop="10dp">
 
 			<TextView
-				android:id="@+id/item_category"
+				android:id="@+id/item_pubDate"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_marginLeft="5dp"
-				android:text="@string/placeholder_category"
-				android:textSize="12sp"/>
-		</LinearLayout>
+				android:layout_alignParentEnd="false"
+				android:layout_alignParentStart="true"
+				android:text="@string/placeholder_pubDate"
+				android:textColor="#ff999999"
+				android:textSize="12sp" />
+
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentBottom="false"
+				android:layout_alignParentEnd="false"
+				android:layout_alignParentStart="true"
+				android:layout_below="@+id/item_pubDate"
+				android:orientation="horizontal">
+
+				<TextView
+					android:id="@+id/item_source"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/placeholder_source"
+					android:textColor="#ff999999"
+					android:textSize="12sp" />
+
+				<TextView
+					android:id="@+id/item_category"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="5dp"
+					android:text="@string/placeholder_category"
+					android:textColor="#ff999999"
+					android:textSize="12sp" />
+
+			</LinearLayout>
+		</RelativeLayout>
 
 	</LinearLayout>
 </LinearLayout>

@@ -68,17 +68,17 @@ public class BookmarkActivity extends Activity implements AdapterView.OnItemClic
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu_main, menu);
+//		getMenuInflater().inflate(R.menu.menu_bookmark, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-
-		if (id == R.id.action_exit) {
-			return true;
-		}
+//		int id = item.getItemId();
+//
+//		if (id == R.id.action_exit) {
+//			return true;
+//		}
 
 		return super.onOptionsItemSelected(item);
 	}

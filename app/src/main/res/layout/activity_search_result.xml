@@ -1,9 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-				xmlns:tools="http://schemas.android.com/tools"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:background="#40ffcc00"
-				tools:context=".MainActivity">
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="#40ffcc00"
+	tools:context=".MainActivity">
 
 	<RelativeLayout
 		android:id="@+id/layout_nav"
@@ -26,7 +26,7 @@
 			android:background="#00000000"
 			android:padding="0dp"
 			android:src="@drawable/logo"
-			android:text="@string/nav_search_result"/>
+			android:text="@string/nav_search_result" />
 
 		<ImageButton
 			android:id="@+id/nav_back"
@@ -36,8 +36,9 @@
 			android:layout_centerVertical="true"
 			android:layout_margin="0dp"
 			android:background="#00000000"
-			android:padding="0dp"
-			android:src="@drawable/back"/>
+			android:padding="10dp"
+			android:scaleType="fitCenter"
+			android:src="@drawable/back" />
 
 		<ImageButton
 			android:id="@+id/nav_none"
@@ -47,8 +48,8 @@
 			android:layout_centerVertical="true"
 			android:layout_margin="0dp"
 			android:background="#00000000"
-			android:padding="0dp"
-			android:visibility="invisible"/>
+			android:padding="10dp"
+			android:scaleType="fitCenter" />
 	</RelativeLayout>
 
 	<RelativeLayout
@@ -63,13 +64,13 @@
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:layout_alignParentStart="true"
-			android:layout_alignParentTop="true"/>
+			android:layout_alignParentTop="true" />
 
 		<ListView
 			android:id="@+id/feed_listview"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:layout_alignParentStart="true"
-			android:layout_below="@+id/search_keywords"/>
+			android:layout_below="@+id/search_keywords" />
 	</RelativeLayout>
 </RelativeLayout>

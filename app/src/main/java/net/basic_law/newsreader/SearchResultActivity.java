@@ -48,7 +48,7 @@ public class SearchResultActivity extends Activity implements AdapterView.OnItem
 
 		query = (String) getIntent().getSerializableExtra(ITEM_EXTRA);
 		if (query != null) {
-			((TextView) findViewById(R.id.search_keywords)).setText("Search result on: "+query);
+			((TextView) findViewById(R.id.search_keywords)).setText("Search result on: " + query);
 			setNewsItemAdapter(query);
 		}
 
@@ -77,17 +77,17 @@ public class SearchResultActivity extends Activity implements AdapterView.OnItem
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu_main, menu);
+//		getMenuInflater().inflate(R.menu.menu_search_result, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-
-		if (id == R.id.action_exit) {
-			return true;
-		}
+//		int id = item.getItemId();
+//
+//		if (id == R.id.action_exit) {
+//			return true;
+//		}
 
 		return super.onOptionsItemSelected(item);
 	}

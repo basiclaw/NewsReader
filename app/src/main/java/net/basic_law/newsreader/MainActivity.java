@@ -28,7 +28,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 	private MainActivity self = this;
 	private List<NewsParser.Item> items = null;
 	private ItemDAO itemDAO;
-	private 	NewsItemAdapter newsItemAdapter;
+	private NewsItemAdapter newsItemAdapter;
 
 	private class GetFeedTask extends AsyncTask<Void, Void, List<NewsParser.Item>> {
 		private String[][] sources = {
@@ -38,10 +38,10 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 				{"MingPao", "http://news.mingpao.com/rss/pns/s00001.xml"},
 				{"Yahoo News", "https://hk.news.yahoo.com/rss/hong-kong "},
 				{"RTHK", "http://www.rthk.org.hk/rthk/news/rss/c_expressnews.xml"},
-				{"HK GOV", "http://www.gov.hk/tc/about/rss.htm"},
-				{"The Standard", "http://www.thestandard.com.hk/newsfeed/latest/news.xml"},
-				{"SCMP", "http://www.scmp.com/rss/2/feed"},
-				{"Wall Street Journal", "http://online.wsj.com/xml/rss/3_8070.xml"}
+				{"HK GOV", "http://www.news.gov.hk/tc/common/html/topstories.rss.xml"},
+//				{"The Standard", "http://www.thestandard.com.hk/newsfeed/latest/news.xml"},
+//				{"SCMP", "http://www.scmp.com/rss/2/feed"},
+//				{"Wall Street Journal", "http://online.wsj.com/xml/rss/3_8070.xml"}
 		};
 
 		@Override
@@ -62,6 +62,8 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
 				itemDAO.updateDatabase(incoming);
 				items = itemDAO.getAll();
+				for (NewsParser.Item item : items)
+					System.out.println("Prepared #" + item.getID() + " -> " + item.getTitle());
 
 				return items;
 			} catch (IOException e) {
@@ -101,10 +103,11 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 			}
 		});
 		((SearchView) findViewById(R.id.nav_search)).setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-			public boolean onQueryTextChange(String newText){
+			public boolean onQueryTextChange(String newText) {
 				return false;
 			}
-			public boolean onQueryTextSubmit (String query){
+
+			public boolean onQueryTextSubmit(String query) {
 				startActivity(SearchResultActivity.getStartIntent(self, query));
 				return false;
 			}
@@ -129,17 +132,17 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu_main, menu);
+//		getMenuInflater().inflate(R.menu.menu_main, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-
-		if (id == R.id.action_exit) {
-			return true;
-		}
+//		int id = item.getItemId();
+//
+//		if (id == R.id.action_exit) {
+//			return true;
+//		}
 
 		return super.onOptionsItemSelected(item);
 	}
